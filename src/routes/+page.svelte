@@ -10,7 +10,7 @@
 				A Mecca of French gastronomy
 			</h1>
 
-			<img src="/hero1.png" alt="hero" class="w-3/4 ml-auto" />
+			<img src="/hero1_c.png" alt="hero" class="w-3/4 ml-auto" />
 		</div>
 		<div>
 			<div class="p-2 space-y-2 rounded-none font-light">
@@ -73,7 +73,7 @@
 			Contacts & Address
 		</h1>
 
-		<ol class="list text-xl font-light px-3 space-y-3 text-tertiary-800">
+		<ol class="list text-xl font-light px-3 space-y-1 text-tertiary-800">
 			<li>
 				<span>Hours:</span>
 				<span class="flex-auto">Tuesday–Saturday 5pm–10pm</span>

@@ -10,9 +10,11 @@ import { categorizeItems } from '$lib/utils';
 /** @type {import('./$types').PageServerLoad} */
 export async function load() {
 
+
   return {
     streamed: {
       dir: new Promise(async (resolve) => {
+        try {
         const result = await dir.request(readItems('items'))
         // .then(data => {
         //     console.log(data);
@@ -33,9 +35,14 @@ export async function load() {
         
         const cat_expaned = categorizeItems(categories, items)
         resolve({ menu_items: cat_expaned, items: items, url: dir.url.origin })
+      } catch {
+        resolve({ error:  ' directus failed to load' })
+      }
       }),
+      
     }
   }
+
 };
 
 export const actions = {

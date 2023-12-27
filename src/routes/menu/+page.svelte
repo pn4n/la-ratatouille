@@ -1,111 +1,64 @@
-<script>    
-    import { show_notif, getTitle } from '$lib/utils'
+<script>
+	import { getDrawerStore } from '@skeletonlabs/skeleton';
 
-    import MenuFooter from "$lib/components/MenuFooter.svelte";
-    import OrderForm from "$lib/components/OrderForm.svelte";
-    import LoadingDirectus from "$lib/components/LoadingDirectus.svelte";
-    import MenuItem from "$lib/components/MenuItem.svelte";
+	const drawerStore = getDrawerStore();
 
-    export let data;
+	import { show_notif, getTitle } from '$lib/utils';
+	import { cart } from '$lib/stores/cart';
+    import { fade } from "svelte/transition";
+	import { ProgressBar } from '@skeletonlabs/skeleton';
 
-    let dialog;
-    let cart_list = {}; //should be writable!
-    let form_status;
+	import MenuFooter from '$lib/components/MenuFooter.svelte';
+	import MenuItem from '$lib/components/MenuItem.svelte';
 
-    $: sum = Object.values(cart_list).reduce(
-        (total, curr) => total + curr.price * curr.counter,
-        0
-    );
+	export let data;
 
-    $: show_notif(form_status);
+	let form_status;
 
-    const close_dialog = () => dialog.close();
+	$: sum = Object.values($cart)
+		.reduce((total, item) => {
+			return total + item.price * item.quantity;
+		}, 0)
+		.toFixed(2);
+
+	$: show_notif(form_status);
+
+	const close_dialog = () => drawerStore.close();
 </script>
 
-<dialog bind:this={dialog}>
-    <article hidden={sum < 1}>
-        <header>
-            <a
-                href="#close"
-                aria-label="Close"
-                class="close"
-                on:click={close_dialog}
-            />
-            { 'menu checkout' }
-        </header>
-
-        <OrderForm bind:cart_list bind:form_status />
-    </article>
-</dialog>
-
+<div transition:fade={{ duration: 300 }} class="pb-10">
 {#await data.streamed.dir}
-
-    <LoadingDirectus />
-
+	<div class="flex flex-col items-center space-y-5 font-light">
+		<p class="text-2xl text-center text-tertiary-800">Please wait, we are loading the menu...</p>
+		<ProgressBar
+			value={undefined}
+			meter="bg-secondary-500"
+			track="bg-secondary-500/30"
+			class="w-1/2"
+		/>
+	</div>
 {:then dir}
-<!-- {console.log(JSON.stringify(dir.menu_items))} -->
-    {#each dir.menu_items as category}
-        <h1>{ getTitle(category, 'en')}</h1>
-        <!-- {console.log(JSON.stringify(category.translations))} -->
-        <div class="grid-container">
-            {#each category.items as item}
-                <MenuItem
-                    item={item}
-                    url={dir.url}
-                    items_list={dir.items}
-                    bind:cart_list
-                />
-            {/each}
-        </div>
-        <hr />
-    {/each}
+	{#each dir.menu_items as category}
+		<h1 class="h1 text-primary-500 font-light text-5xl pl-3 pt-10 pb-3">
+			{getTitle(category, 'en')}
+		</h1>
 
-    <div hidden={sum < 1}>
-        <MenuFooter bind:sum bind:dialog />
-    </div>
+		<div
+			class="snap-x scroll-px-4 snap-mandatory scroll-smooth flex gap-4 overflow-x-auto px-4 pb-2 pt-4"
+		>
+			{#each category.items as item}
+				<div class="snap-start shrink-0 card py-0 w-80 md:w-120 text-center">
+					<MenuItem {item} url={dir.url} />
+				</div>
+			{/each}
+		</div>
+	{/each}
 
+	<div hidden={sum < 1}>
+		<MenuFooter bind:sum />
+	</div>
 {:catch error}
-
-    <p>{ 'directus failed' }</p>
-    <p>{error.message}</p>
-
+	<p>{data.streamed.dir.error}</p>
+	<p>{error.message}</p>
 {/await}
-
-<style>
-    dialog {
-        overflow-y: hidden; /* Hide vertical scrollbar */
-    }
-
-    p {
-        margin: auto 0;
-        width: 300px;
-    }
-
-    .grid-container {
-        /**
-        * User input values.
-        */
-        --grid-layout-gap: 10px;
-        --grid-column-count: 2; /* This gets overridden by an inline style. */
-        --grid-item--min-width: 300px; /* This gets overridden by an inline style. */
-
-        /**
-        * Calculated values.
-        */
-        --gap-count: calc(var(--grid-column-count) - 1);
-        --total-gap-width: calc(var(--gap-count) * var(--grid-layout-gap));
-        --grid-item--max-width: calc(
-            (100% - var(--total-gap-width)) / var(--grid-column-count)
-        );
-
-        display: grid;
-        grid-template-columns: repeat(
-            auto-fill,
-            minmax(
-                max(var(--grid-item--min-width), var(--grid-item--max-width)),
-                1fr
-            )
-        );
-        grid-gap: var(--grid-layout-gap);
-    }
-</style>
+</div>

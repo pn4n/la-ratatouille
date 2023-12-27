@@ -1,87 +1,63 @@
 <script>
     import LazyImage from "$lib/components/LazyImage.svelte";
     import { getTitle } from '$lib/utils'
+    import { cart } from '$lib/stores/cart';
 
     export let item;
     export let url;
-    export let cart_list;
-    export let items_list;
-
-    const add_item = (id) => {
-        const it = items_list.find((item) => item["id"] === id);
-
-        console.log(cart_list);
-        cart_list[id] = { title: it.title, price: it.price, counter: 1 };
-    };
-
-    const handle_increse = (id) => {
-        cart_list[id]["counter"]++;
-        console.log(cart_list);
-    };
-
-    const handle_decrese = (id) => {
-        cart_list[id]["counter"]--;
-        if (cart_list[id]["counter"] < 1) {
-            delete cart_list[id];
-        }
-    };
+    
 </script>
 
-<article class="container">
-    <header>{ getTitle(item, 'en')}</header>
+<div class="card article text-xl text-secondary-800 py-12">
+    <div class="card-header bg-surface-100">{ getTitle(item, 'en')}</div>
 
     <LazyImage src="{url}/assets/{item.img}" alt="menu item" />
 
-    <footer>
-        <p>{item.price} { 'menu.currency' }</p>
+    <div class="card-footer bg-surface-100">
+        <p>{item.price} EUR</p>
         <div class="grid">
-            {#if cart_list.hasOwnProperty(item.id)}
-                <button class="outline" on:click={() => handle_increse(item.id)}
+            {#if $cart.hasOwnProperty(item.id)}
+            <button class="btn px-3 variant-soft-surface" on:click={() => cart.decreaseQuantity(item.id)}
+                >-</button
+            >
+
+                <span class="btn px-3 variant-soft-surface"> {$cart[item.id]?.quantity}</span>
+
+
+                <button class="btn px-3 variant-soft-surface" on:click={() =>  cart.increaseQuantity(item.id)}
                     >+</button
                 >
-
-                <input
-                    type="number"
-                    bind:value={cart_list[item.id]["counter"]}
-                />
-
-                <button class="outline" on:click={() => handle_decrese(item.id)}
-                    >-</button
-                >
             {:else}
-                <button class="outline" on:click={() => add_item(item.id)}>
-                    { 'menu.add' }</button
+                <button class="btn variant-soft-surface" on:click={() => cart.addToCart(item)}>
+                    Add</button
                 >
             {/if}
         </div>
-    </footer>
-</article>
+    </div>
+</div>
 
 <style>
-    :root {
-        --transaparent-color: rgba(0, 0, 0, 0);
-    }
     p {
-        margin: auto 0;
-        width: 300px;
+        margin: auto 25px;
     }
-    article {
+    .article {
         text-align: center;
         aspect-ratio: 9 / 12;
         max-width: 500px;
         position: relative;
         background-size: cover;
     }
-    footer {
+    .card-footer {
         display: flex;
-        justify-content: space-around;
+        justify-content:space-between;
         position: absolute;
         bottom: 0;
         margin: 0;
+        padding: 0 10px 0;
         width: 100%;
     }
-    header {
-        padding: auto 0;
+    .card-header {
+        padding: 10px 0 0;
         position: absolute;
         top: 0;
         margin: 0;
@@ -95,22 +71,12 @@
         column-gap: 0px;
     }
     button,
-    input {
+    span {
         max-height: fit-content;
-        margin: auto 0;
-        height: 50px;
+        margin: auto 03px;
+        height: 30px;
         display: inline-flex;
         align-items: center;
         justify-content: center;
-    }
-
-    /* remove  arrows */
-    input::-webkit-outer-spin-button,
-    input::-webkit-inner-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
-    }
-    input[type="number"] {
-        -moz-appearance: textfield;
     }
 </style>

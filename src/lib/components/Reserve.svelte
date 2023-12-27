@@ -1,10 +1,10 @@
 
-<div id="book" class="p-2 lg:p-8 md:m-8 mx-0 my-8  space-y-5 card rounded-none variant-ringed-surface shadow-lg">
+<div id="book" class="p-2 lg:p-8 md:m-8 mx-0 my-8  space-y-5 card rounded-none bg-surface-50">
     <h1 class="h1 text-primary-500 font-light mx-auto text-center text-5xl pl-3 ">
         Reserve a table
     </h1>
 
-    <p class="text-xl text-primary-800 font-light">
+    <p class="text-xl text-secondary-800 font-light">
 "La Ratatouille" strives to feature market and local cuisine. 
 The majority of products are organic and local, selected from producers and breeders in the region.
     </p>

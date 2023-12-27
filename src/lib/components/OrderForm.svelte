@@ -1,19 +1,20 @@
 <script>
   import { enhance } from '$app/forms';
   
-  export let cart_list
+	import { cart } from '$lib/stores/cart';
+  export let sum
   
   export let form_status 
 
   let form
 
-  $: json_order = JSON.stringify(cart_list)
+  // $: json_order = JSON.stringify(cart_list)
   $: form_status = form?.success
 
-  $: total = Object.values(cart_list).reduce(
-    (total, curr) => total + curr.price * curr.counter,
-    0
-  );
+  // $: total = Object.values(cart_list).reduce(
+  //   (total, curr) => total + curr.price * curr.counter,
+  //   0
+  // );
 
 
 </script>
@@ -28,7 +29,7 @@
       </tr>
     </thead>
     <tbody>
-      {#each Object.entries(cart_list) as [key, item]}
+      {#each Object.entries(cart) as [key, item]}
       
         <tr>
           <th scope="row">{item.counter}</th>
@@ -43,7 +44,7 @@
         <th scope="col">{ 'menu.order.total' }</th>
         <td />
         <td />
-        <td>{total}</td>
+        <td>{sum}</td>
       </tr>
     </tfoot>
   </table>
@@ -59,8 +60,8 @@
         }}>
 
     <!-- FIRST THING TO FIX!!!!!  -->
-    <input type="text" id="order" name="order" hidden 
-      bind:value={json_order}>
+    <!-- <input type="text" id="order" name="order" hidden 
+      bind:value={json_order}> -->
 
       <label for="name">{ 'form.name' }
         <input type="text" id="name" name="name" required />

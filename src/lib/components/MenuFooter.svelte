@@ -1,22 +1,27 @@
 <script>
-    
+    import { getDrawerStore } from "@skeletonlabs/skeleton";
+
+    const drawerStore = getDrawerStore();
+
     export let sum = 0
-    export let dialog
+    
 
     const handle_click = () => {
-        dialog.showModal()
+        drawerStore.open()
     }
 </script>
 
-<article class="grid">
-    <div class="sum-div">
-        <p>menu.sum</p>
-        <p>{sum} {'menu.currency'}</p>
-    </div>
-    <button class="outline contrast" type="button" on:click={handle_click}>
-        { 'menu.chechkout' }
-    </button>
-</article>
+<div class="wrapper">
+    <article class="grid">
+        <div class="sum-div">
+            <p>Total: {sum} EUR</p>
+        </div>
+        <button class="btn variant-filled-tertiary" type="button" on:click={handle_click}>
+            Checkout
+        </button>
+    </article>
+</div>
+
 
 <style>
     p {
@@ -25,22 +30,29 @@
         font-weight: 500;
     }
     article {
-        position: fixed;
+        position:relative;
         bottom: 0;
-        left: 5rem;
-        right: 5rem;
+        /* left: 5rem; */
+        right: 0;
         padding: 10px;
         height: min-content;
         text-align: center;
-        margin: 10px auto;
+        /* margin: 10px auto; */
     }
     .sum-div {
         display: flex;
     }
+    .wrapper {
+        max-width: 1200px;
+        width: 100%;
+        position: absolute;
+        bottom: 0;
+        border: 2px red solid;
+    }
     button {
         /* display: inline-flex;
         align-items: center; */
-        margin-bottom: 0px;
+        margin: 0px 6px;
         max-width: 300px;
         /* border-left: none;
         border-right: none; */
@@ -52,7 +64,7 @@
     }
 
     .grid {
-        display: inline-flex;
-        justify-content: space-around;
+        display: flex;
+        justify-content: end;
     }
 </style>

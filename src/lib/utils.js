@@ -1,22 +1,30 @@
-import { toast } from "svoast";
+// import { getToastStore } from '@skeletonlabs/skeleton';
 
-export const show_notif = (status) => {
+// const toastStore = getToastStore();
+
+export const show_notif = (status, toastStore) => {
+  // const t = {
+  //   message: 'Lorem ipsum dolor sit amet consectetur adipisicing elit...',
+  // };
     switch (status) {
       
       case "complete":
-        toast.removeAll();
-        toast.success( 'Success' );
+        // toast.removeAll();
+        toastStore.trigger( { message: 'Success'} );
         break;
 
       case "loading":
-        toast.info( 'Loading' );
+        toastStore.trigger( { message: 'Loading...'} );
         break;
 
       case "failes":
-        toast.removeAll();
-        toast.error( 'Error' );
+        // toast.removeAll();
+        toastStore.trigger( { message: 'Error'} );
         break;
-  }};
+
+  }
+  // toastStore.trigger(t);
+};
 
 // merging categories with items
 export function categorizeItems(categories, items) {

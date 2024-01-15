@@ -8,27 +8,27 @@
     
 </script>
 
-<div class="card article text-xl text-secondary-800 py-12">
-    <div class="card-header bg-surface-100">{ getTitle(item, 'en')}</div>
+<div class="card article text-xl rounded-none py-12 text-secondary-800">
+    <div class="card-header bg-surface-50">{ getTitle(item, 'en')}</div>
 
     <LazyImage src="{url}/assets/{item.img}" alt="menu item" />
 
-    <div class="card-footer bg-surface-100">
+    <div class="card-footer bg-surface-50">
         <p>{item.price} EUR</p>
-        <div class="grid">
+        <div class="grid ">
             {#if $cart.hasOwnProperty(item.id)}
-            <button class="btn px-3 variant-soft-surface" on:click={() => cart.decreaseQuantity(item.id)}
+            <button class="btn px-3 variant-soft-tertiary" on:click={() => cart.decreaseQuantity(item.id)}
                 >-</button
             >
 
-                <span class="btn px-3 variant-soft-surface"> {$cart[item.id]?.quantity}</span>
+                <span class="btn px-3 "> {$cart[item.id]?.quantity}</span>
 
 
-                <button class="btn px-3 variant-soft-surface" on:click={() =>  cart.increaseQuantity(item.id)}
+                <button class="btn px-3 variant-soft-tertiary" on:click={() =>  cart.increaseQuantity(item.id)}
                     >+</button
                 >
             {:else}
-                <button class="btn variant-soft-surface" on:click={() => cart.addToCart(item)}>
+                <button class="btn variant-soft-tertiary" on:click={() => cart.addToCart(item)}>
                     Add</button
                 >
             {/if}
@@ -57,7 +57,7 @@
         width: 100%;
     }
     .card-header {
-        padding: 10px 0 0;
+        padding: 10px 0;
         position: absolute;
         top: 0;
         margin: 0;

@@ -30,6 +30,9 @@ const createCart = () => {
             delete updated_cart[itemId];
             return updated_cart;
         }),
+        getSum: () => {
+            return getTotal();
+        },
         clearCart: () => set([]),
     };
 }

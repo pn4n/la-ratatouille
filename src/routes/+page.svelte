@@ -1,8 +1,31 @@
 <script>
 	import Reserve from "$lib/components/Reserve.svelte";
 	import { fade } from "svelte/transition";
-</script>
 
+	import { getToastStore } from '@skeletonlabs/skeleton';
+	const toastStore = getToastStore();
+
+	// export let data;
+	export let form;
+	
+	if (form?.success) {
+		console.log(form.res)
+		toastStore.trigger({
+			message: 'Your reservation was sent. <a href="/reservation/' + form?.res + '" class="underline anchor">Check status</a>',
+			autohide: false,
+			background: 'variant-filled-secondary',
+		});
+	} else if (form?.success === false) {
+		toastStore.trigger({
+			message: 'An error occurred',
+			timeout: 10000,
+			background: 'variant-filled-tertiary',
+		})
+	}
+</script>
+<!-- <div>
+{JSON.stringify(data)}
+</div> -->
 <div class="bg-white" transition:fade={{ duration: 300 }}>
 	<div class="space-y-5 grid grid-cols-1 p-0 lg:grid-cols-2">
 		<div class=" ml-auto">
@@ -14,7 +37,7 @@
 		</div>
 		<div>
 			<div class="p-2 space-y-2 rounded-none font-light">
-				<!-- <h1 class="h1 font-light">A Mecca of French gastronomy</h1>  -->
+				
 				<p class="text-xl text-tertiary-800">
 					Known as the last bastion in London of classically rich French haute cuisine, La
 					Ratatouille restaurant has become a London institution, internationally recognised for its
@@ -91,26 +114,15 @@
 				<span class="flex-auto">+44 00 1234 5678</span>
 			</li>
 		</ol>
-		<!-- </div> -->
 
 	</div>
-	<!-- <ul>
-		<li><code class="code">/src/routes/+layout.svelte</code> - barebones layout</li>
-		<li><code class="code">/src/app.postcss</code> - app wide css</li>
-		<li>
-			<code class="code">/src/routes/+page.svelte</code> - this page, you can replace the contents
-		</li>
-	</ul> -->
 </div>
 
-<!-- </div> -->
 <style>
 	p {
 		text-indent: 20px;
 	}
-	/* .bg-hero {
-		background-color: rgba(0, 0, 0, 0.5);
-	} */
+
 	h1 {
 		z-index: 1;
 		position: relative;
@@ -118,6 +130,5 @@
 	img {
 		margin-top: -2vw;
 		z-index: -100;
-		/* filter: brightness(1.7); */
 	}
 </style>

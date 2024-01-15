@@ -1,17 +1,22 @@
 <script>
-	import Footer from '$lib/components/Footer.svelte';
-
 	import '../app.postcss';
-	import { AppShell } from '@skeletonlabs/skeleton';
-	import { AppBar } from '@skeletonlabs/skeleton';
-	import { Drawer } from '@skeletonlabs/skeleton';
-	import { initializeStores } from '@skeletonlabs/skeleton';
-	import { Toasts } from 'svoast';
-
 	import { page } from '$app/stores';
-	import { cart } from '$lib/stores/cart';
+	// import { cart } from '$lib/stores/cart';
 
-	initializeStores();
+	import Footer from '$lib/components/Footer.svelte';
+	import OrderForm from '$lib/components/OrderForm.svelte';
+
+	
+	import { AppShell ,
+			 AppBar ,
+			 Drawer ,
+			 Toast } from '@skeletonlabs/skeleton';
+	import { initializeStores, getToastStore } from '@skeletonlabs/skeleton';
+	// import { writable } from 'svelte/store';
+
+
+	initializeStores();	
+	const toastStore = getToastStore();
 
 	let nav_items = [
 		{ link: '/menu', title: 'Menu' },
@@ -20,47 +25,16 @@
 
 		{ link: '/reviews', title: 'Account' }
 	];
-	$: console.log($cart);
+
 
 </script>
-<Toasts position="bottom-center" />
+
+<Toast rounded='rounded-none'/>
+
 <Drawer>
-	
-
-<div class="table-container">
-	<!-- Native Table Element -->
-	<table class="table table-hover">
-		<thead>
-			<tr>
-				<th>Title</th>
-				<th>Quantity</th>
-				<th>Price</th>
-				<th>Sum</th>
-			</tr>
-		</thead>
-		<tbody>
-			{#each Object.values($cart) as item (item.id)}
-				<tr>
-
-					<td>{ item.title }</td>
-					<td>{ item.quantity }</td>
-					<td>{ item.price}</td>
-					<td>{ item.quantity * item.price }</td>
-				</tr>
-			{/each}
-		</tbody>
-		<tfoot>
-			<tr>
-				<th colspan="3">Calculated Total Weight</th>
-				<td>SUM</td>
-			</tr>
-		</tfoot>
-	</table>
-	<!-- {JSON.stringify(item)}	 -->
-
-</div>
-
+	<OrderForm/>
 </Drawer>
+
 <AppShell>
 	<svelte:fragment slot="header">
 		<div class="main">

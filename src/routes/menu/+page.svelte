@@ -1,6 +1,8 @@
 <script>
 	import { getDrawerStore } from '@skeletonlabs/skeleton';
+	import { getToastStore } from '@skeletonlabs/skeleton';
 
+	const toastStore = getToastStore();
 	const drawerStore = getDrawerStore();
 
 	import { show_notif, getTitle } from '$lib/utils';
@@ -13,21 +15,31 @@
 
 	export let data;
 
-	let form_status;
-
+	// export let form_status;
+	
+	// const trigger_toast = () => {
+	// 	const t = {
+	// 		message: 'Lorem ipsum dolor sit amet consectetur adipisicing elit...',
+	// 		background: 'variant-filled-secondary',
+	// 	};
+	// 	toastStore.trigger(t);
+	// 	// console.log('inside func', JSON.stringify(toastStore))
+	// }
+	let sum;
 	$: sum = Object.values($cart)
 		.reduce((total, item) => {
 			return total + item.price * item.quantity;
 		}, 0)
 		.toFixed(2);
 
-	$: show_notif(form_status);
+	// $: show_notif(form_status);
 
 	const close_dialog = () => drawerStore.close();
 </script>
 
+<!-- <button class="btn" on:click={trigger_toast}>click</button> -->
 <div transition:fade={{ duration: 300 }} class="pb-10">
-{#await data.streamed.dir}
+{#await data.streamed}
 	<div class="flex flex-col items-center space-y-5 font-light">
 		<p class="text-2xl text-center text-tertiary-800">Please wait, we are loading the menu...</p>
 		<ProgressBar
@@ -38,8 +50,9 @@
 		/>
 	</div>
 {:then dir}
+<div>{JSON.stringify(dir.orders)}</div>
 	{#each dir.menu_items as category}
-		<h1 class="h1 text-primary-500 font-light text-5xl pl-3 pt-10 pb-3">
+		<h1 class="h2 text-primary-500 font-light text-5xl pl-3 pt-10 pb-3">
 			{getTitle(category, 'en')}
 		</h1>
 
@@ -54,9 +67,9 @@
 		</div>
 	{/each}
 
-	<div hidden={sum < 1}>
-		<MenuFooter bind:sum />
-	</div>
+	{#if sum > 0}
+	<MenuFooter bind:sum />
+	{/if}
 {:catch error}
 	<p>{data.streamed.dir.error}</p>
 	<p>{error.message}</p>

@@ -1,90 +1,106 @@
 <script>
-  import { enhance } from '$app/forms';
-  
+	import { enhance } from '$app/forms';
+	import { Stepper, Step } from '@skeletonlabs/skeleton';
+	import { getToastStore } from '@skeletonlabs/skeleton';
 	import { cart } from '$lib/stores/cart';
-  export let sum
-  
-  export let form_status 
+	import { show_notif } from '$lib/utils';
 
-  let form
+	const toastStore = getToastStore();
+	let form_status;
+	let form;
 
-  // $: json_order = JSON.stringify(cart_list)
-  $: form_status = form?.success
+	const submit = () => {
+		if (form) form.submit();
+		console.log('eh?')
+	};
 
-  // $: total = Object.values(cart_list).reduce(
-  //   (total, curr) => total + curr.price * curr.counter,
-  //   0
-  // );
+	$: form_status = form?.success;
+	$: console.log(form);
 
-
+	// $: show_notif(form_status, toastStore);
 </script>
 
-  <table>
-    <thead>
-      <tr>
-        <th scope="col">#</th>
-        <th scope="col">{ 'menu.order.title' }</th>
-        <th scope="col">{ 'menu.order.price' }</th>
-        <th scope="col">{ 'menu.order.subtotal' }</th>
-      </tr>
-    </thead>
-    <tbody>
-      {#each Object.entries(cart) as [key, item]}
-      
-        <tr>
-          <th scope="row">{item.counter}</th>
-          <td>{item.title}</td>
-          <td>{item.price}</td>
-          <td>{item.price * item.counter}</td>
-        </tr>
-      {/each}
-    </tbody>
-    <tfoot>
-      <tr>
-        <th scope="col">{ 'menu.order.total' }</th>
-        <td />
-        <td />
-        <td>{sum}</td>
-      </tr>
-    </tfoot>
-  </table>
+<div class="p-2">
+	<Stepper regionContent="text-tertiary-800 py-2" on:complete={submit}>
+		<Step>
+			<svelte:fragment slot="header">
+				<p class="text-primary-500 font-light text-4xl">Cart</p>
+			</svelte:fragment>
 
-  <form method="POST" bind:this={form}
-        use:enhance={() => {
-          form_status = 'loading';
+			<div class="table-container text-tertiary-800">
+				<table class="table table-hover">
+					<thead>
+						<tr>
+							<th>Item</th>
+							<th>Quantity</th>
+							<th>Price</th>
+							<th>Sum</th>
+						</tr>
+					</thead>
+					<tbody>
+						{#each Object.values($cart) as item (item.id)}
+							<tr>
+								<td>{item.title}</td>
+								<td>{item.quantity}</td>
+								<td>{item.price}</td>
+								<td>{(item.quantity * item.price).toFixed(2)}</td>
+							</tr>
+						{/each}
+					</tbody>
+					<tfoot>
+						<tr>
+							<th colspan="3">Total sum</th>
+							<td>SUM</td>
+						</tr>
+					</tfoot>
+				</table>
+			</div>
+		</Step>
+		<Step>
+			<svelte:fragment slot="header">
+				<h1 class="text-primary-500 font-light text-4xl p-2">Delivery info</h1>
+			</svelte:fragment>
+			<form
+				method="POST"
+				bind:this={form}
+				use:enhance={() => {
+					form_status = 'loading';
 
-          return async ({ update }) => {
-            await update();
-            form_status = 'complete'
-          };
-        }}>
+					return async ({ update }) => {
+						await update();
+						form_status = 'complete';
+						show_notif(form_status, toastStore);
+					};
+				}}
+			>
+				<div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+					<label class="label">
+						<span>Name</span>
+						<input class="input variant-form-material" type="text" name="name" />
+					</label>
+					<label class="label">
+						<span>Phone number</span>
+						<input class="input variant-form-material" type="tel" name="phone"/>
+					</label>
+				</div>
+				<div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+					<label class="label">
+						<span>E-mail</span>
+						<input class="input variant-form-material" type="email" name="email"/>
+					</label>
+					<label class="label">
+						<span>Address</span>
+						<input class="input variant-form-material" type="text" name="address"/>
+					</label>
+				</div>
+				<label class="label">
+					<span>Comment</span>
+					<textarea class="textarea variant-form-material" name="comment"></textarea>
+				</label>
+				<textarea class="hidden" name="order"> {JSON.stringify($cart)} </textarea>
 
-    <!-- FIRST THING TO FIX!!!!!  -->
-    <!-- <input type="text" id="order" name="order" hidden 
-      bind:value={json_order}> -->
-
-      <label for="name">{ 'form.name' }
-        <input type="text" id="name" name="name" required />
-      </label>
-
-    <div class="grid">
-      <label for="email">{ 'form.email' }
-        <input type="email" id="email" name="email" />
-      </label>
-
-      <label for="phone">{ 'form.phone' }
-        <input type="phone" id="phone" name="phone" required />
-      </label>
-    </div>
-
-    <label for="address">{ 'form.address' }
-      <input type="text" id="address" name="address" />
-    </label>
-
-    <label for="comment"
-      >{ 'form.comment' }
-      <input type="text" id="comment" name="comment" />
-    </label>
-
-    <button class="outline">{ 'form.submit' }</button>
-  </form>
+				<!-- <button class="btn variant-filled-primary">{'form.submit'}</button> -->
+			</form>
+		</Step>
+	</Stepper>
+</div>

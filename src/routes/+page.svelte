@@ -8,14 +8,7 @@
 	// export let data;
 	export let form;
 	
-	if (form?.success) {
-		console.log(form.res)
-		toastStore.trigger({
-			message: 'Your reservation was sent. <a href="/reservation/' + form?.res + '" class="underline anchor">Check status</a>',
-			autohide: false,
-			background: 'variant-filled-secondary',
-		});
-	} else if (form?.success === false) {
+	if (form?.success === false) {
 		toastStore.trigger({
 			message: 'An error occurred',
 			timeout: 10000,
@@ -90,6 +83,9 @@
 	</div>
 
 	<Reserve />
+	{#if form?.message}
+	<p> {form?.message}</p>
+	{/if}
 
 	<div class="space-y-5 grid grid-cols-1 py-8 p-0 lg:grid-cols-2">
 		<h1 id="book" class="h1 text-primary-500 font-light mx-auto text-center text-5xl pl-3 ">

@@ -9,16 +9,19 @@
 "La Ratatouille" strives to feature market and local cuisine. 
 The majority of products are organic and local, selected from producers and breeders in the region.
     </p>
+    <p class="text-xl text-secondary-800 font-light">
+Please <a href="/account" class="anchor">create an account</a> to save the history of your reservations and orders.
+    </p>
     <form method="POST" class="space-y-5">
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <label class="label">
-            <span>First name</span>
-            <input class="input variant-form-material " type="text" name="first_name" required/>
+            <span>Name</span>
+            <input class="input variant-form-material " type="text" name="name" required/>
         </label>
         <label class="label">
-            <span>Last name</span>
-            <input class="input variant-form-material" type="text" name="last_name" required/>
+            <span>Email</span>
+            <input class="input variant-form-material" type="email" name="email" required/>
         </label>
         <label class="label">
             <span>Phone number</span>

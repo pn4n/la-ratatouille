@@ -11,13 +11,9 @@
 
 	const submit = () => {
 		if (form) form.submit();
-		console.log('eh?')
 	};
 
 	$: form_status = form?.success;
-	$: console.log(form);
-
-	// $: show_notif(form_status, toastStore);
 </script>
 
 <div class="p-2">
@@ -38,7 +34,7 @@
 						</tr>
 					</thead>
 					<tbody>
-						{#each Object.values($cart) as item (item.id)}
+						{#each $cart as item}
 							<tr>
 								<td>{item.title}</td>
 								<td>{item.quantity}</td>
@@ -76,30 +72,28 @@
 				<div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
 					<label class="label">
 						<span>Name</span>
-						<input class="input variant-form-material" type="text" name="name" />
+						<input class="input variant-form-material" type="text" name="name" required/>
 					</label>
 					<label class="label">
 						<span>Phone number</span>
-						<input class="input variant-form-material" type="tel" name="phone"/>
+						<input class="input variant-form-material" type="tel" name="phone" required/>
 					</label>
 				</div>
 				<div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
 					<label class="label">
 						<span>E-mail</span>
-						<input class="input variant-form-material" type="email" name="email"/>
+						<input class="input variant-form-material" type="email" name="email" required/>
 					</label>
 					<label class="label">
 						<span>Address</span>
-						<input class="input variant-form-material" type="text" name="address"/>
+						<input class="input variant-form-material" type="text" name="address" required/>
 					</label>
 				</div>
 				<label class="label">
 					<span>Comment</span>
 					<textarea class="textarea variant-form-material" name="comment"></textarea>
 				</label>
-				<textarea class="hidden" name="order"> {JSON.stringify($cart)} </textarea>
-
-				<!-- <button class="btn variant-filled-primary">{'form.submit'}</button> -->
+				<textarea class='hidden' name="order"> {JSON.stringify($cart.map(x => ({id:x.id, quantity:x.quantity})))} </textarea>
 			</form>
 		</Step>
 	</Stepper>

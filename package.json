@@ -36,7 +36,6 @@
   },
   "type": "module",
   "dependencies": {
-    "@auth/sveltekit": "^0.5.2",
     "@directus/sdk": "^14.0.0"
   }
 }

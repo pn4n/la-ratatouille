@@ -6,35 +6,34 @@ const createCart = () => {
     return {
         subscribe,
         addToCart: (item) => update(items => {
-            const updated_cart = { ...items };
-            updated_cart[item.id] = { ...item, 'quantity': 1 };
-            return updated_cart;
+            return [ ...items,  { ...item, 'quantity': 1 }]
         }),
         increaseQuantity: (itemId) => update(items => {
-            if (items[itemId]) {
-                items[itemId]['quantity']++;
+            const itemIndex = items.findIndex(i => i.id === itemId);
+            if (itemIndex !== -1) {
+                items[itemIndex].quantity += 1;
             }
-            return items
+            return [...items];
         }),
         decreaseQuantity: (itemId) => update(items => {
-            if (items[itemId]) {
-                if (items[itemId]['quantity'] > 1)
-                    items[itemId]['quantity']--;
-                else
-                    delete items[itemId];
+            const itemIndex = items.findIndex(i => i.id === itemId);
+            if (itemIndex !== -1) {
+                if (items[itemIndex].quantity > 1) {
+                    items[itemIndex].quantity -= 1;
+                } else {
+                    items.splice(itemIndex, 1);
+                }
             }
-            return items
+            return [...items];
         }),
         removeFromCart: (itemId) => update(items => {
-            const updated_cart = { ...items };
-            delete updated_cart[itemId];
-            return updated_cart;
+            return items.filter(i => i.id !== itemId);
         }),
-        getSum: () => {
-            return getTotal();
-        },
         clearCart: () => set([]),
     };
 }
 
 export const cart = createCart();
+// export const totalCartPrice = derived(cart, ($cart) =>
+//   $cart.reduce((total, item) => total + item.totalPrice, 0).toFixed(2)
+// );

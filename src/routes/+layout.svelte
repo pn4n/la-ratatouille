@@ -23,7 +23,7 @@
 
 		{ link: '/#book', title: 'Reserve' },
 
-		{ link: '/reviews', title: 'Account' }
+		{ link: '/account', title: 'Account' }
 	];
 
 

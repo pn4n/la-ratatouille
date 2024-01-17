@@ -5,7 +5,9 @@
 
     export let item;
     export let url;
-    
+    let itemInCart;
+  
+  $: itemInCart = $cart.find(it => it.id === item.id);
 </script>
 
 <div class="card article text-xl rounded-none py-12 text-secondary-800">
@@ -16,12 +18,12 @@
     <div class="card-footer bg-surface-50">
         <p>{item.price} EUR</p>
         <div class="grid ">
-            {#if $cart.hasOwnProperty(item.id)}
+            {#if itemInCart?.quantity}
             <button class="btn px-3 variant-soft-tertiary" on:click={() => cart.decreaseQuantity(item.id)}
                 >-</button
             >
 
-                <span class="btn px-3 "> {$cart[item.id]?.quantity}</span>
+                <span class="btn px-3 "> {itemInCart?.quantity}</span>
 
 
                 <button class="btn px-3 variant-soft-tertiary" on:click={() =>  cart.increaseQuantity(item.id)}

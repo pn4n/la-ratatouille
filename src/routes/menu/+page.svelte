@@ -5,7 +5,7 @@
 	const toastStore = getToastStore();
 	const drawerStore = getDrawerStore();
 
-	import { show_notif, getTitle } from '$lib/utils';
+	import { getTitle } from '$lib/utils';
 	import { cart } from '$lib/stores/cart';
     import { fade } from "svelte/transition";
 	import { ProgressBar } from '@skeletonlabs/skeleton';
@@ -14,27 +14,26 @@
 	import MenuItem from '$lib/components/MenuItem.svelte';
 
 	export let data;
-
-	// export let form_status;
-	
-	// const trigger_toast = () => {
-	// 	const t = {
-	// 		message: 'Lorem ipsum dolor sit amet consectetur adipisicing elit...',
-	// 		background: 'variant-filled-secondary',
-	// 	};
-	// 	toastStore.trigger(t);
-	// 	// console.log('inside func', JSON.stringify(toastStore))
-	// }
+	export let form;
 	let sum;
-	$: sum = Object.values($cart)
-		.reduce((total, item) => {
+	$: sum = $cart.reduce((total, item) => {
 			return total + item.price * item.quantity;
 		}, 0)
 		.toFixed(2);
 
-	// $: show_notif(form_status);
-
-	const close_dialog = () => drawerStore.close();
+	if (form?.success) {
+		toastStore.trigger({
+			message: 'Your order was sent',
+			autohide: false,
+			background: 'variant-filled-secondary',
+		});
+	} else if (form?.success === false) {
+		toastStore.trigger({
+			message: 'An error occurred',
+			timeout: 10000,
+			background: 'variant-filled-tertiary',
+		})
+	}
 </script>
 
 <!-- <button class="btn" on:click={trigger_toast}>click</button> -->
@@ -51,6 +50,7 @@
 	</div>
 {:then dir}
 <div>{JSON.stringify(dir.orders)}</div>
+<div>{JSON.stringify(form)}</div>
 	{#each dir.menu_items as category}
 		<h1 class="h2 text-primary-500 font-light text-5xl pl-3 pt-10 pb-3">
 			{getTitle(category, 'en')}

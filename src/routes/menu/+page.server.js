@@ -1,16 +1,12 @@
-import { readItems, createItem } from '@directus/sdk/rest';
+import { readItems, createItem } from '@directus/sdk';
 
-import { dir } from '$lib/dir-client.js';
-import { fail } from 'assert';
+import { getDirectusInstance } from '$lib/dir-client.js';
+import { fail } from '@sveltejs/kit';
 import { categorizeItems } from '$lib/utils';
-// import { error } from 'console';
-// import { userInfo } from 'os';
-
-// import { language } from '@inlang/sdk-js';
-
 
 /** @type {import('./$types').PageServerLoad} */
-export async function load() {
+export async function load({ fetch }) {
+	const dir = getDirectusInstance(fetch);
 
 
   return {
@@ -41,8 +37,7 @@ export async function load() {
 };
 
 export const actions = {
-  default: async ({ request }) => {
-    // const dir = directus()
+  default: async ({ request, cookies }) => {
     const data = await request.formData();
 
     const item_object = {
@@ -52,28 +47,27 @@ export const actions = {
               ', Phone: ' + data.get('phone') +
               ', Address: ' + data.get('address') +
               ', Comment: ' + data.get('comment'),
-      request_info: data.get('order') + 'yey'
     }
+    let items = data.get('order')
     const order = {
       status: 'created',
-      user: '1',
-      items:Object.keys(data.get('order')),
+      // for unauthorized user:NULL
+      user: '4f108f40-41d8-4b53-b011-9840cc568b35',
+      items: JSON.parse(items),
       address: data.get('address'),
       info: item_object.user_info
-      // user_info:'Email: ' + data.get('email') +
-      //         ', Name: ' + data.get('name') +
-      //         ', Phone: ' + data.get('phone') +
-      //         ', Address: ' + data.get('address') +
-      //         ', Comment: ' + data.get('comment'),
-      // request_info: data.get('order') + 'yey'
     }
 
     try {
-      // await dir.request(createItem('requests', item_object));
-      await dir.request(createItem('orders', order));
+      const dir = getDirectusInstance();
+      const res = await dir.request(createItem('orders', order));
+
+      // for unauthorized
+      cookies.set('order', res.id, {path: '/'});
+
       return { success: true }
     } catch (error) {
-      return fail(JSON.stringify(error))
+      return fail(400, {success: false , message: JSON.stringify(error)})
     }
   },
 };

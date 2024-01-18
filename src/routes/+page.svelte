@@ -1,25 +1,27 @@
 <script>
-	import Reserve from "$lib/components/Reserve.svelte";
-	import { fade } from "svelte/transition";
+	import Reserve from '$lib/components/Reserve.svelte';
+	import { fade } from 'svelte/transition';
 
 	import { getToastStore } from '@skeletonlabs/skeleton';
 	const toastStore = getToastStore();
 
 	// export let data;
 	export let form;
-	
+
 	if (form?.success === false) {
 		toastStore.trigger({
 			message: 'An error occurred',
 			timeout: 10000,
-			background: 'variant-filled-tertiary',
-		})
+			background: 'variant-filled-tertiary'
+		});
 	}
+	export let data;
 </script>
+
 <!-- <div>
 {JSON.stringify(data)}
 </div> -->
-<div class="bg-white" transition:fade={{ duration: 300 }}>
+<div class="bg-white" in:fade={{ duration: 300 }}>
 	<div class="space-y-5 grid grid-cols-1 p-0 lg:grid-cols-2">
 		<div class=" ml-auto">
 			<h1 class="h1 text-primary-500 font-light ml-auto text-5xl pl-3">
@@ -30,7 +32,6 @@
 		</div>
 		<div>
 			<div class="p-2 space-y-2 rounded-none font-light">
-				
 				<p class="text-xl text-tertiary-800">
 					Known as the last bastion in London of classically rich French haute cuisine, La
 					Ratatouille restaurant has become a London institution, internationally recognised for its
@@ -56,7 +57,7 @@
 
 	<div class="space-y-5 grid grid-cols-1 py-8 p-0 lg:grid-cols-2">
 		<div class="ml-0 lg:order-last">
-			<h1 class="h1 text-primary-500 font-light mr-auto text-5xl pl-3 ">
+			<h1 class="h1 text-primary-500 font-light mr-auto text-5xl pl-3">
 				Wine Cellar & Wine library
 			</h1>
 
@@ -64,31 +65,48 @@
 		</div>
 		<div class="p-2 font-light flex items-center">
 			<div class="p-2 space-y-2">
-			<p class="text-xl text-tertiary-800">
-				The restaurant at Relais Bernard Loiseau boasts one of the finest wine cellars in Burgundy
-				(15 000 bottles, or 900 different labels).
-			</p>
-			<p class="text-xl text-tertiary-800">
-				Executive Chef Sommelier Eric Goettelmann, Meilleur Ouvrier de France 2019, signs the menus
-				of all our restaurants.
-			</p>
-			<p class="text-xl text-tertiary-800">
-				We have a real wine's expertise. Our latest wine library features up to 40 wines by the
-				glass. Discover the finest Burgundy's crus !
-			</p>
-
+				<p class="text-xl text-tertiary-800">
+					The restaurant at Relais Bernard Loiseau boasts one of the finest wine cellars in Burgundy
+					(15 000 bottles, or 900 different labels).
+				</p>
+				<p class="text-xl text-tertiary-800">
+					Executive Chef Sommelier Eric Goettelmann, Meilleur Ouvrier de France 2019, signs the
+					menus of all our restaurants.
+				</p>
+				<p class="text-xl text-tertiary-800">
+					We have a real wine's expertise. Our latest wine library features up to 40 wines by the
+					glass. Discover the finest Burgundy's crus !
+				</p>
 			</div>
 		</div>
-
 	</div>
+	{#await data}
+		<Reserve />
+	{:then data}
+		{#if data.reservation}
+		<!-- {data.reservation} -->
+			<div id="book">
+				<div
+					class="p-2 lg:p-8 md:m-8 mx-0 my-8 space-y-5 card rounded-none bg-surface-50 text-primary-500"
+				>
+					<h1 class="h1 text-primary-500 font-light mx-auto text-center text-5xl pl-3">
+						Reserve a table
+					</h1>
 
-	<Reserve />
-	{#if form?.message}
-	<p> {form?.message}</p>
-	{/if}
+					<p class="text-xl text-secondary-800 font-light py-3">
+						You already have an active  
+						<a href="/reservation/{data.reservation}" class="anchor">reservation</a>.
+						Please cancel it if you want to make a new one.
+					</p>
+				</div>
+			</div>
+		{:else}
+			<Reserve user={data.user} />
+		{/if}
+	{/await}
 
 	<div class="space-y-5 grid grid-cols-1 py-8 p-0 lg:grid-cols-2">
-		<h1 id="book" class="h1 text-primary-500 font-light mx-auto text-center text-5xl pl-3 ">
+		<h1 id="book" class="h1 text-primary-500 font-light mx-auto text-center text-5xl pl-3">
 			Contacts & Address
 		</h1>
 
@@ -110,7 +128,6 @@
 				<span class="flex-auto">+44 00 1234 5678</span>
 			</li>
 		</ol>
-
 	</div>
 </div>
 

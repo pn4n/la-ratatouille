@@ -1,12 +1,14 @@
-import { getDirectusInstance, getReserve } from '$lib/dir-client.js';
+import { getDirectusInstance, getOrder, getItems } from '$lib/dir-client.js';
 import { readItem, updateItem } from '@directus/sdk';
 import { error } from '@sveltejs/kit';
 
-export async function load({ fetch, params }) {
-	const res = await getReserve(params.slug)
+export async function load({ params }) {
+	const res = await getOrder(params.slug)
+    console.log('load', res)
     if (res.data.length < 1) {
         return error(404, 'Not found')
     }
+    // const items = getItems(res.data[0].order_items)
     return {res}
 }
 
@@ -16,7 +18,7 @@ export const actions = {
         const dir = getDirectusInstance(fetch);
         try {
             const reserve = await dir.request(readItem( 
-                'reservations', params.slug));
+                'orders', params.slug));
 
             if (reserve.user != locals.user.id) { 
                 return fail(400, { success:false, 
@@ -29,7 +31,7 @@ export const actions = {
             }
 
             await dir.request(updateItem( 
-                'reservations', params.slug, { 'status': 'canceled' } ));
+                'orders', params.slug, { 'status': 'canceled' } ));
             await cookies.delete('reservation', { path: '/' })
             return { success: true }
           } catch (error) {

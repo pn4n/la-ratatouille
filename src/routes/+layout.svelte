@@ -1,6 +1,7 @@
 <script>
 	import '../app.postcss';
 	import { page } from '$app/stores';
+	import { beforeNavigate } from '$app/navigation';
 	// import { cart } from '$lib/stores/cart';
 
 	import Footer from '$lib/components/Footer.svelte';
@@ -18,6 +19,8 @@
 	initializeStores();	
 	const toastStore = getToastStore();
 
+    let user = $page.data.user;
+
 	let nav_items = [
 		{ link: '/menu', title: 'Menu' },
 
@@ -25,6 +28,12 @@
 
 		{ link: '/account', title: 'Account' }
 	];
+	// let top;
+	beforeNavigate((node) => {
+		console.log(node)
+		document.getElementById('page')?.scrollTo(0, 0);
+	// }
+	});
 
 
 </script>
@@ -32,7 +41,7 @@
 <Toast rounded='rounded-none'/>
 
 <Drawer>
-	<OrderForm/>
+	<OrderForm bind:user/>
 </Drawer>
 
 <AppShell>

@@ -1,13 +1,6 @@
 import type { Handle } from '@sveltejs/kit';
-import { getUserById } from '$lib/dir-client';
-// import { SvelteKitAuth } from "@auth/sveltekit";
-// import Auth from "@auth/core";
-// import Credentials from "@auth/core/providers/credentials";
 
-// import GitHub from "@auth/sveltekit/providers/github";
-// import Mailru from "@auth/sveltekit/providers/mailru";
-// import { GITHUB_ID, GITHUB_SECRET } from "$env/static/private";
-// import { MAILRU_CLIENT_ID, MAILRU_CLIENT_SECRET } from "$env/static/private";
+import { verifySession } from '$lib/dir-client';
 import { sequence } from '@sveltejs/kit/hooks';
 import { redirect } from '@sveltejs/kit';
 
@@ -20,28 +13,43 @@ export async function dir_handle({ event, resolve }) {
 }
 
 export const auth_handle = async ({ event, resolve }) => {
-	const sessionId = event.cookies.get('session_id');
-	const pathname = event.url.pathname;
-	console.log('path: ', pathname)
-	if (!sessionId && pathname.startsWith('/account/')) {
-		throw redirect(303, '/account');
-	}
-	// const currentUser = await getUserById(sessionId);
-	// if (currentUser) {
-	// 	event.locals.user = {
-	// 		isAuthenticated: true,
-	// 		email: currentUser.email,
-	// 		id: currentUser.id
-	// 	};
-	// } else {
-	// 	if (pathname.startsWith('/account/')) {
-	// 		throw redirect(303, '/');
-	// 	}
-	// }
+	const username = event.cookies.get('user');
 
-	if (pathname.startsWith('/signout')) {
-		await event.cookies.delete('session_id', { path: '/' });
-		console.log('<signout>')
+	const pathname = event.url.pathname;
+
+	if (!username && pathname.startsWith('/account')) {
+		throw redirect(303, '/login');
+	}
+	
+	const res = await verifySession(username, event.cookies.get('session'));
+	
+	if (!res.success) {
+		await event.cookies.delete('session', { path: '/' });
+		await event.cookies.delete('user', { path: '/' });
+		
+		if ( pathname.startsWith('/account')) throw redirect(303, '/login');
+	}
+
+	if (pathname == '/login') throw redirect(303, '/account');
+
+	const currentUser = res.user
+	if (currentUser) {
+		event.locals.user = {
+			isAuthenticated: true,
+			email: currentUser.email,
+			id: currentUser.id,
+			name: currentUser.name,
+			phone: currentUser.phone,
+			address: currentUser.address,
+		};
+	} 
+	if (pathname == '/signout') {
+		await event.cookies.delete('session', { path: '/' });
+		await event.cookies.delete('user', { path: '/' });
+		await event.cookies.delete('reservation', { path: '/' });
+		await event.cookies.delete('order', { path: '/' });
+		event.locals.user = null;
+		redirect(303, '/account');
 	}
 	return resolve(event);
 }

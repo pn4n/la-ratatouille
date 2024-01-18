@@ -1,15 +1,17 @@
 import { readItems, createItem } from '@directus/sdk';
+import { redirect } from '@sveltejs/kit';
 
 import { getDirectusInstance } from '$lib/dir-client.js';
 import { fail } from '@sveltejs/kit';
 import { categorizeItems } from '$lib/utils';
 
 /** @type {import('./$types').PageServerLoad} */
-export async function load({ fetch }) {
+export async function load({ fetch, locals }) {
 	const dir = getDirectusInstance(fetch);
-
-
+  // let user
+  // if (locals.user) user = locals.user
   return {
+    // user: locals.user,
     streamed: new Promise(async (resolve) => {
         try {
         const result = await dir.request(readItems('items'))
@@ -23,9 +25,9 @@ export async function load({ fetch }) {
               { deep: {translations: { }}, 
                 fields: ['*', { translations: ['*'] }]
               } ))
-        let orders = await dir.request(readItems('orders' ))
+        // let orders = await dir.request(readItems('users' ))
         const cat_expaned = categorizeItems(categories, items)
-        resolve({ menu_items: cat_expaned, items: items, url: dir.url.origin, orders: orders })
+        resolve({ menu_items: cat_expaned, items: items, url: dir.url.origin })
       } catch {
         resolve({ error:  ' directus failed to load' })
       }
@@ -37,37 +39,39 @@ export async function load({ fetch }) {
 };
 
 export const actions = {
-  default: async ({ request, cookies }) => {
+  default: async ({ request, cookies, locals }) => {
     const data = await request.formData();
 
-    const item_object = {
+    let user
+    if (locals.user == null) user = UNAUTHORIZED;
+    else user = locals.user.id
 
-      user_info:'Email: ' + data.get('email') +
+
+    const item_info ='Email: ' + data.get('email') +
               ', Name: ' + data.get('name') +
               ', Phone: ' + data.get('phone') +
               ', Address: ' + data.get('address') +
-              ', Comment: ' + data.get('comment'),
-    }
+              ', Comment: ' + data.get('comment')
+
     let items = data.get('order')
+    console.log('items', JSON.parse(items))
     const order = {
       status: 'created',
       // for unauthorized user:NULL
-      user: '4f108f40-41d8-4b53-b011-9840cc568b35',
-      items: JSON.parse(items),
+      user: user,
+      order_items: JSON.parse(items),
       address: data.get('address'),
-      info: item_object.user_info
+      info: item_info
     }
-
+    let res
     try {
       const dir = getDirectusInstance();
-      const res = await dir.request(createItem('orders', order));
-
-      // for unauthorized
+      res = await dir.request(createItem('orders', order));
       cookies.set('order', res.id, {path: '/'});
-
-      return { success: true }
     } catch (error) {
+      console.log(error)
       return fail(400, {success: false , message: JSON.stringify(error)})
     }
+    redirect(303, '/order/' + res.id);
   },
 };

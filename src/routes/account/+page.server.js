@@ -1,49 +1,26 @@
-import { redirect } from '@sveltejs/kit';
-import { generateHash, readItem, createItem } from '@directus/sdk';
 import { getDirectusInstance } from '$lib/dir-client.js';
-import { fail } from 'assert';
+import { readItems } from '@directus/sdk';
 
-// export const load = async (event) => {
-//   const session = await event.locals.getSession();
-//   // if (!session?.user) {
-//   //   throw redirect(303, '/auth');
-//   // }
-//   // return {session};
-// };
+export const load = async ({url, locals}) => {
+  console.log('l', locals)
+  const dir = getDirectusInstance();
+  let orders = await dir.request(readItems('orders',
+    { filter: { user: { _eq: locals.user.id } } }));
+  // console.log(orders)
+  let reserves = await dir.request(readItems('reservations',
+    { filter: { user: { _eq: locals.user.id } } }));
+  // if (reserves) reserves = reserves.map((res) => {
+  //   id:res.id,
+  //   date:res.date,
+  //   stat:res.status})
+  // if (orders) orders = orders.map((res) => {
+  //   id:res.id,
+  //   date:res.date,
+  //   stat:res.status})
+    // console.log(orders)
+  
+  const tab = url.searchParams.get('tab');
 
-/** @type {import('./$types').Actions} */
-export const actions = {
-	signup: async ({ request, params }) => {
-        const dir = getDirectusInstance(fetch);
-        const data = await request.formData();
-    
-        try {
-          console.log(data.get('password'), generateHash(data.get('password')))
-          const user = {
-            email: data.get('email'),
-            pass :data.get('password'),
-            name: data.get('name')
-          } 
-          const res = await dir.request(createItem('users', user));
-                console.log(res);
-            return { success: true }
-          } catch (error) {
-            console.log( error)
-            return { success: false, error }
-          }
-        },
-  signin: async ({ request, params }) => {
-    const dir = getDirectusInstance(fetch);
-    const data = await request.formData();
+  return { tab, reserves, orders }
+}
 
-    try {
-      const res = await dir.request(readItem( 
-        'users', data.username ));
-        console.log(res);
-        return { success: true }
-      } catch (error) {
-        // console.log( error)
-        return { success: false, error }
-      }
-    }
-};

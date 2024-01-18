@@ -9,6 +9,8 @@
 	let form_status;
 	let form;
 
+	export let user
+
 	const submit = () => {
 		if (form) form.submit();
 	};
@@ -16,14 +18,14 @@
 	$: form_status = form?.success;
 </script>
 
-<div class="p-2">
-	<Stepper regionContent="text-tertiary-800 py-2" on:complete={submit}>
+<div class="p-2 md:px-8">
+	<Stepper regionContent="text-surface-800 py-2 " on:complete={submit}>
 		<Step>
 			<svelte:fragment slot="header">
-				<p class="text-primary-500 font-light text-4xl">Cart</p>
+				<p class="text-primary-500 font-light text-4xl p-2">Cart</p>
 			</svelte:fragment>
 
-			<div class="table-container text-tertiary-800">
+			<div class="table-container text-primary-900 ">
 				<table class="table table-hover">
 					<thead>
 						<tr>
@@ -58,6 +60,7 @@
 			</svelte:fragment>
 			<form
 				method="POST"
+				class=" p-2 space-y-5 text-primary-900"
 				bind:this={form}
 				use:enhance={() => {
 					form_status = 'loading';
@@ -65,35 +68,39 @@
 					return async ({ update }) => {
 						await update();
 						form_status = 'complete';
-						show_notif(form_status, toastStore);
+						// show_notif(form_status, toastStore);
 					};
 				}}
 			>
 				<div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
 					<label class="label">
 						<span>Name</span>
-						<input class="input variant-form-material" type="text" name="name" required/>
+						<input class="input variant-form-material" type="text" name="name" 
+							value={user ? user.name : ''} required/>
 					</label>
 					<label class="label">
 						<span>Phone number</span>
-						<input class="input variant-form-material" type="tel" name="phone" required/>
+						<input class="input variant-form-material" type="tel" name="phone"
+							value={user ? user.phone : ''} required/>
 					</label>
 				</div>
 				<div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
 					<label class="label">
 						<span>E-mail</span>
-						<input class="input variant-form-material" type="email" name="email" required/>
+						<input class="input variant-form-material" type="email" name="email" 
+							value={user ? user.email : ''} required/>
 					</label>
 					<label class="label">
 						<span>Address</span>
-						<input class="input variant-form-material" type="text" name="address" required/>
+						<input class="input variant-form-material" type="text" name="address" 
+							value={user ? user.address : ''} required/>
 					</label>
 				</div>
 				<label class="label">
 					<span>Comment</span>
 					<textarea class="textarea variant-form-material" name="comment"></textarea>
 				</label>
-				<textarea class='hidden' name="order"> {JSON.stringify($cart.map(x => ({id:x.id, quantity:x.quantity})))} </textarea>
+				<textarea class='hidden' name="order"> {JSON.stringify($cart.map(x => ({items_id:x.id, quantity:x.quantity})))} </textarea>
 			</form>
 		</Step>
 	</Stepper>

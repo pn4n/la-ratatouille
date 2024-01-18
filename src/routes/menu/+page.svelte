@@ -37,7 +37,7 @@
 </script>
 
 <!-- <button class="btn" on:click={trigger_toast}>click</button> -->
-<div transition:fade={{ duration: 300 }} class="pb-10">
+<div class="pb-10" in:fade={{ duration: 300 }}>
 {#await data.streamed}
 	<div class="flex flex-col items-center space-y-5 font-light">
 		<p class="text-2xl text-center text-tertiary-800">Please wait, we are loading the menu...</p>
@@ -49,8 +49,8 @@
 		/>
 	</div>
 {:then dir}
-<div>{JSON.stringify(dir.orders)}</div>
-<div>{JSON.stringify(form)}</div>
+<!-- <div>{JSON.stringify(dir.orders)}</div>
+<div>{JSON.stringify(form)}</div> -->
 	{#each dir.menu_items as category}
 		<h1 class="h2 text-primary-500 font-light text-5xl pl-3 pt-10 pb-3">
 			{getTitle(category, 'en')}

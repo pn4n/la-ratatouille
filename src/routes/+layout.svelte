@@ -2,23 +2,29 @@
 	import '../app.postcss';
 	import { page } from '$app/stores';
 	import { beforeNavigate } from '$app/navigation';
-	// import { cart } from '$lib/stores/cart';
 
 	import Footer from '$lib/components/Footer.svelte';
 	import OrderForm from '$lib/components/OrderForm.svelte';
-
+	import ModalList from '$lib/components/ModalList.svelte';
 	
 	import { AppShell ,
 			 AppBar ,
 			 Drawer ,
 			 Toast } from '@skeletonlabs/skeleton';
 	import { initializeStores, getToastStore } from '@skeletonlabs/skeleton';
-	// import { writable } from 'svelte/store';
-
+	import { Modal, getModalStore } from '@skeletonlabs/skeleton';
 
 	initializeStores();	
 	const toastStore = getToastStore();
+	const modalStore = getModalStore();
 
+	const modalComponent = { ref: ModalList };
+
+	const modal = {
+		type: 'component',
+		component: modalComponent,
+	};
+											
     let user = $page.data.user;
 
 	let nav_items = [
@@ -29,15 +35,10 @@
 		{ link: '/account', title: 'Account' }
 	];
 	// let top;
-	beforeNavigate((node) => {
-		console.log(node)
-		document.getElementById('page')?.scrollTo(0, 0);
-	// }
-	});
-
+	beforeNavigate(() => document.getElementById('page')?.scrollTo(0, 0));
 
 </script>
-
+<Modal/>
 <Toast rounded='rounded-none'/>
 
 <Drawer>
@@ -53,7 +54,7 @@
 				</svelte:fragment>
 				<a href="/" class="h2 font-light text-tertiary-800">La Ratatouille</a>
 				<svelte:fragment slot="trail">
-					<div class="space-x-0">
+					<div class="space-x-0 hidden md:block">
 						{#each nav_items as route}
 							{#if route.link === $page.route.id}
 								<a
@@ -67,6 +68,25 @@
 								>
 							{/if}
 						{/each}
+					</div>
+					<div class="space-x-0 md:hidden block" >
+					<button on:click={() => modalStore.trigger(modal)}>
+					<img src="/svg/burger.svg" alt="icon" class="w-10">
+					</button>
+						
+						<!-- {#each nav_items as route}
+							{#if route.link === $page.route.id}
+								<a
+									href={route.link}
+									class="btn variant-soft-tertiary text-xl font-light rounded-none"
+									>{route.title}</a
+								>
+							{:else}
+								<a href={route.link} class="btn text-tertiary-800 text-xl font-light"
+									>{route.title}</a
+								>
+							{/if}
+						{/each} -->
 					</div>
 				</svelte:fragment>
 			</AppBar>

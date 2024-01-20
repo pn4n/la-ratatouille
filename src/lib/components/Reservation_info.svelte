@@ -1,8 +1,9 @@
 <script>
 	import { fade } from 'svelte/transition';
 	export let res;
-</script>
+	export let isAuthenticated
 
+</script>
 	<div in:fade={{ duration: 300 }}
 		class="p-2 lg:p-8 md:m-8 mx-0 my-8 space-y-5 card rounded-none bg-surface-50 text-xl text-secondary-800"
 	>
@@ -14,37 +15,40 @@
 			you a table. Please wait for an email or phone confirmation of your booking before coming to
 			the restaurant. Pleasase arrive a couple of minutes before the reservation time.
 		</p>
-		<div class="p-3 text-xl text-secondary-800 font-light grid md:grid-cols-2">
+		<div class="px-0 py-3 xs:px-3 text-xl text-secondary-800 font-light grid md:grid-cols-2">
 			<p>Date: {res.date}</p>
 			<p>Time: {res.time}</p>
 			{#each res.info.split('\n') as info}
 				<p>{info}</p>
 			{/each}
 		</div>
-		<p class="mx-5 rounded-none code p-3 text-xl text-primary-800 font-light">
+		<p class="px-0 py-3 xs:px-3 rounded-none code p-3 text-xl text-primary-800 font-light">
 			Status: {res.status}
 		</p>
 		<p class="text-xl text-secondary-800 font-light">
-			After the confirmation your reservation status will be updated. You can only create one
-			reservation as unauthorized user. Please create an account to save the history of your
+			After the confirmation your reservation status will be updated.
+		</p>
+
+
+		{#if !isAuthenticated}
+		<p class="text-xl text-secondary-800 font-light">
+			You can only create one
+			reservation as unauthorized user. Please 
+			<a href="/login?tab=register" class="anchor">create an account</a> or
+			<a href="/login" class="anchor">login</a>
+			 to save the history of your
 			reservations and orders.
 		</p>
-		<div class="logo-cloud grid-cols-1 grid-cols-1 md:grid-cols-2 gap-1 rounded-none">
-            {#if res.status != 'canceled'}
-			<form action="?/cancel" method="POST">
-				<button class="btn variant-filled-primary w-full p-3">Cancel reservation</button>
+	{/if}
+	<div class="logo-cloud mx-auto rounded-none">
+		{#if (res.status == 'created' || res.status == 'accepted')}
+			<form action="?/cancel" method="POST" class="mx-auto">
+				<button class="btn variant-filled-primary p-3">Cancel reservation</button>
 			</form>
-            {:else}
-                <a class="btn variant-filled-primary w-full p-3" href="/#book"
-					>New reservation</a
-				>
-            {/if}
-			<div>
-				<a class="btn variant-filled-primary w-full p-3" href="/login"
-					>Create an account or login</a
-				>
-			</div>
-		</div>
+		{:else}
+			<a class="btn variant-filled-primary mx-auto p-3" href="/#book">New reservation</a>
+		{/if}
+	</div>
 	</div>
   
 <style>

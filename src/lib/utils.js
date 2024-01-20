@@ -1,7 +1,3 @@
-// import { getToastStore } from '@skeletonlabs/skeleton';
-
-// const toastStore = getToastStore();
-
 export const show_notif = (status, toastStore) => {
   // const t = {
   //   message: 'Lorem ipsum dolor sit amet consectetur adipisicing elit...',
@@ -71,4 +67,14 @@ export function split_text(text) {
         return element.replace(/\n/g, "<br>");
     });
 
+}
+
+export const formatDate = (date) => {
+
+  const Ddate = new Date(date);
+  return new Intl.DateTimeFormat('en-GB', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+  }).format(Ddate);
 }

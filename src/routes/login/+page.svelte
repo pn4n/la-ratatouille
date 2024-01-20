@@ -110,3 +110,7 @@
 		</svelte:fragment>
 	</TabGroup>
 </div>
+
+<form method="POST" class="space-y-5 py-5" action="?/sinin">
+	<button class="btn">kek test</button>
+</form>

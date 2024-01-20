@@ -23,7 +23,6 @@
 			background: 'text-white bg-tertiary-400',
 		})
 	}
-  $: console.log('data:', data)
   </script>
 <div in:fade={{ duration: 300 }}
 	class="p-5 lg:p-8 space-y-5 card rounded-none bg-surface-50 text-primary-500 max-w-8xl mx-auto"

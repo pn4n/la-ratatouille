@@ -1,5 +1,5 @@
 import type { Handle } from '@sveltejs/kit';
-
+import { DIRECTUS_URL } from '$env/static/private';
 import { verifySession } from '$lib/dir-client';
 import { sequence } from '@sveltejs/kit/hooks';
 import { redirect } from '@sveltejs/kit';
@@ -30,7 +30,7 @@ export const auth_handle = async ({ event, resolve }) => {
 		if ( pathname.startsWith('/account')) throw redirect(303, '/login');
 	}
 
-	if (pathname == '/login') throw redirect(303, '/account');
+	if (username && pathname == '/login') throw redirect(303, '/account');
 
 	const currentUser = res.user
 	if (currentUser) {
@@ -49,9 +49,14 @@ export const auth_handle = async ({ event, resolve }) => {
 		await event.cookies.delete('reservation', { path: '/' });
 		await event.cookies.delete('order', { path: '/' });
 		event.locals.user = null;
-		redirect(303, '/account');
+		redirect(303, '/login');
 	}
-	return resolve(event);
+	
+	const response = await resolve(event);
+      if (event.url.pathname.startsWith('/')) {
+            response.headers.append('Access-Control-Allow-Origin', DIRECTUS_URL);
+      }
+      return response;
 }
 
 export const handle: Handle = sequence(

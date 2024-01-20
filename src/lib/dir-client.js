@@ -1,6 +1,5 @@
 import { createDirectus, rest, staticToken } from '@directus/sdk';
-import { readItem, updateItem, updateUser,
-		 createItem, deleteItem, verifyHash } from '@directus/sdk';
+import { readItem, updateItem, verifyHash } from '@directus/sdk';
 import { DIRECTUS_URL } from '$env/static/private';
 import { DIRECTUS_TOKEN } from '$env/static/private';
 
@@ -139,10 +138,12 @@ fields=' + fields.join(',')
 // 	return await response.json();
 // }
 
-export const updateUser = async (user, order, reserve) => {
+export const updateUser = async (user_id, order_id, reserve_id) => {
 	const dir = getDirectusInstance();
 	const res = {}
-	res.order = await dir.request(updateItem('orders', order.id, {user: user}));
-	res.reserve = await dir.request(updateItem('reservations', reserve.id, {user: user}));
+    if (order_id)
+	    res.order = await dir.request(updateItem('orders', order_id, {user: user_id}));
+    if (reserve_id)
+	    res.reserve = await dir.request(updateItem('reservations', reserve_id, {user: user_id}));
 	return res
 }

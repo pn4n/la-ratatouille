@@ -1,20 +1,20 @@
 import { readItems, createItem } from '@directus/sdk';
 import { redirect } from '@sveltejs/kit';
+import { UNAUTHORIZED } from '$env/static/private';
 
 import { getDirectusInstance } from '$lib/dir-client.js';
 import { fail } from '@sveltejs/kit';
 import { categorizeItems } from '$lib/utils';
 
 /** @type {import('./$types').PageServerLoad} */
-export async function load({ fetch, locals }) {
-	const dir = getDirectusInstance(fetch);
+export async function load({ locals }) {
+	const dir = getDirectusInstance();
   // let user
   // if (locals.user) user = locals.user
   return {
     // user: locals.user,
     streamed: new Promise(async (resolve) => {
         try {
-        const result = await dir.request(readItems('items'))
 
         const items = await dir.request(readItems('items', 
               { deep: {translations: { }}, 
@@ -54,7 +54,6 @@ export const actions = {
               ', Comment: ' + data.get('comment')
 
     let items = data.get('order')
-    console.log('items', JSON.parse(items))
     const order = {
       status: 'created',
       // for unauthorized user:NULL
@@ -67,7 +66,13 @@ export const actions = {
     try {
       const dir = getDirectusInstance();
       res = await dir.request(createItem('orders', order));
-      cookies.set('order', res.id, {path: '/'});
+      cookies.set('order', res.id, {
+        path: '/',
+        httpOnly: true,
+        sameSite: 'strict',
+        secure: true,
+        maxAge: 60 * 60 * 24 * 7 // one week
+      });
     } catch (error) {
       console.log(error)
       return fail(400, {success: false , message: JSON.stringify(error)})

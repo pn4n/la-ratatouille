@@ -1,15 +1,16 @@
-import { getDirectusInstance, getOrder, getItems } from '$lib/dir-client.js';
+import { getDirectusInstance, getOrder } from '$lib/dir-client.js';
 import { readItem, updateItem } from '@directus/sdk';
-import { error } from '@sveltejs/kit';
+import { error, fail } from '@sveltejs/kit';
+import { UNAUTHORIZED } from '$env/static/private';
 
-export async function load({ params }) {
+export async function load({ params, locals }) {
+    const isAuthenticated = locals?.user?.isAuthenticated || false
 	const res = await getOrder(params.slug)
-    console.log('load', res)
     if (res.data.length < 1) {
         return error(404, 'Not found')
     }
     // const items = getItems(res.data[0].order_items)
-    return {res}
+    return {res, isAuthenticated}
 }
 
 /** @type {import('./$types').Actions} */
@@ -20,7 +21,8 @@ export const actions = {
             const reserve = await dir.request(readItem( 
                 'orders', params.slug));
 
-            if (reserve.user != locals.user.id) { 
+            const current_user = locals?.user?.id || UNAUTHORIZED
+            if (reserve.user != current_user) { 
                 return fail(400, { success:false, 
                     message: 'only owner can cancel this reservation' } )
             } 

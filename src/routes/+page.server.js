@@ -51,8 +51,14 @@ export const actions = {
 
     try {
       res = await dir.request(createItem('reservations', reserve));
-      console.log(res)
-      cookies.set('reservation', res.id, {path: '/'});
+
+      cookies.set('reservation', res.id, {
+        path: '/',
+        httpOnly: true,
+        sameSite: 'strict',
+        secure: true,
+        maxAge: 60 * 60 * 24 * 7 // one week
+      });
     } catch (error) {
       console.log(error)
       return fail(400,{ success: false, message: JSON.stringify(error) })

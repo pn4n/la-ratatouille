@@ -1,9 +1,7 @@
 <script>
-	import { getDrawerStore } from '@skeletonlabs/skeleton';
 	import { getToastStore } from '@skeletonlabs/skeleton';
 
 	const toastStore = getToastStore();
-	const drawerStore = getDrawerStore();
 
 	import { getTitle } from '$lib/utils';
 	import { cart } from '$lib/stores/cart';

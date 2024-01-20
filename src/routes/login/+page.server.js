@@ -1,12 +1,10 @@
 import { redirect } from '@sveltejs/kit';
 import { generateHash, createItem } from '@directus/sdk';
-import { getDirectusInstance, verifyUser, updateUser } from '$lib/dir-client.js';
+import { getDirectusInstance, verifyUser } from '$lib/dir-client.js';
 import { fail } from '@sveltejs/kit';
 
 export function load({url}) {
-  // const data = await parent()
-  // console.log(data)
-  // if (data != null) redirect(303, '/account');
+  
   const tab = url.searchParams.get('tab');
   return { tab }
 }
@@ -41,12 +39,10 @@ export const actions = {
         maxAge: 60 * 60 * 24 * 7 // one week
       });
 
-      // cookies.set('session', res.pass, { path: '/' });
-
       // update a user in the database for active order and reserve
-      const reserve = cookies.get('reservation', { path: '/' });
-      const order = cookies.get('order', { path: '/' });
-      updateUser(res.id, order, reserve)
+      // const reserve = await cookies.get('reservation', { path: '/' });
+      // const order = await cookies.get('order', { path: '/' });
+      // updateUser(res.id, order, reserve)
 
       return { success: true }
     } catch (error) {
@@ -79,13 +75,48 @@ export const actions = {
         secure: true,
         maxAge: 60 * 60 * 24 * 7 // one week
       });
-
       // update a user in the database for active order and reserve
-      const reserve = cookies.get('reservation', { path: '/' });
-      const order = cookies.get('order', { path: '/' });
-      updateUser(res.id, order, reserve)
+      // const reserve = await cookies.get('reservation', { path: '/' });
+      // const order = await cookies.get('order', { path: '/' });
+      // const ress = await updateUser(res.id, order, reserve)
+      redirect(303, '/account')
+    }
+
+    return fail(400, res)
+  },
+  sinin: async ({ request, cookies }) => {
+    const data = await request.formData();
+    console.log('[1] data:', data )
+
+    const res = { success:true,  user:{email: data.get('email'), pass: data.get('password')}}
+
+    console.log('[2] res:', res )
+
+    if (!res.success) return fail(400, res)
+
+    if (res.user) {
+      cookies.set('session', res.user.pass, {
+        path: '/',
+        httpOnly: true,
+        sameSite: 'strict',
+        secure: true,
+        maxAge: 60 * 60 * 24 * 7 // one week
+      });
+      cookies.set('user', res.user.email, {
+        path: '/',
+        httpOnly: true,
+        sameSite: 'strict',
+        secure: true,
+        maxAge: 60 * 60 * 24 * 7 // one week
+      });
+      console.log('[3] before reirect:' )
+      // update a user in the database for active order and reserve
+      // const reserve = await cookies.get('reservation', { path: '/' });
+      // const order = await cookies.get('order', { path: '/' });
+      // const ress = await updateUser(res.id, order, reserve)
 
       redirect(303, '/account')
+      
     }
     
 

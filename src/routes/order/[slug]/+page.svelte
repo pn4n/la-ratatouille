@@ -14,7 +14,7 @@
 			background: 'text-white bg-tertiary-400',
 		})
 	}
-    // $: console.log('page:', data)
+    
 </script>
 
 <div class="pb-10" in:fade={{ duration: 300 }}>
@@ -31,7 +31,7 @@
         </div>
     {:then res}
 
-        <OrderInfo order={res.res.data[0]} />
+        <OrderInfo order={res.res.data[0]} isAuthenticated={res.isAuthenticated}/>
 
     {/await}
     

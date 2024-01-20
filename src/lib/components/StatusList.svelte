@@ -1,6 +1,7 @@
 <script>
 	export let list
 	export let type
+	import { formatDate } from '$lib/utils'
 </script>
 <div class="p-5">
 {#if list.length > 1}
@@ -20,7 +21,7 @@
 		<li>
 			<a href="/{type}/{item.id}">
 				<span class="badge bg-tertiary-400 rounded-none text-white">{i + 1}</span>
-				<span class="flex-auto">{item.date}</span>
+				<span class="flex-auto">{formatDate(item.date_created || item.date)}</span>
                 <span class="text-right">{item.status}</span>
 			</a>
 		</li>

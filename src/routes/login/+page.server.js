@@ -84,43 +84,5 @@ export const actions = {
 
     return fail(400, res)
   },
-  sinin: async ({ request, cookies }) => {
-    const data = await request.formData();
-    console.log('[1] data:', data )
-
-    const res = { success:true,  user:{email: data.get('email'), pass: data.get('password')}}
-
-    console.log('[2] res:', res )
-
-    if (!res.success) return fail(400, res)
-
-    if (res.user) {
-      cookies.set('session', res.user.pass, {
-        path: '/',
-        httpOnly: true,
-        sameSite: 'strict',
-        secure: true,
-        maxAge: 60 * 60 * 24 * 7 // one week
-      });
-      cookies.set('user', res.user.email, {
-        path: '/',
-        httpOnly: true,
-        sameSite: 'strict',
-        secure: true,
-        maxAge: 60 * 60 * 24 * 7 // one week
-      });
-      console.log('[3] before reirect:' )
-      // update a user in the database for active order and reserve
-      // const reserve = await cookies.get('reservation', { path: '/' });
-      // const order = await cookies.get('order', { path: '/' });
-      // const ress = await updateUser(res.id, order, reserve)
-
-      redirect(303, '/account')
-      
-    }
-    
-
-    // return fail(400, res)
-  }
 };
 

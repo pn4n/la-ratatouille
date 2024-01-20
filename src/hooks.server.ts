@@ -1,6 +1,6 @@
 import type { Handle } from '@sveltejs/kit';
 import { DIRECTUS_URL } from '$env/static/private';
-import { verifySession } from '$lib/dir-client';
+import { verifySession } from '$lib/dir-client.js';
 import { sequence } from '@sveltejs/kit/hooks';
 import { redirect } from '@sveltejs/kit';
 
@@ -21,7 +21,12 @@ export const auth_handle = async ({ event, resolve }) => {
 		throw redirect(303, '/login');
 	}
 	
-	const res = await verifySession(username, event.cookies.get('session'));
+	const session = await event.cookies.get('session');
+	let res = {success: false, user:null}
+	
+	if (session) {
+		res = await verifySession(username,session);
+	}
 	
 	if (!res.success) {
 		await event.cookies.delete('session', { path: '/' });
@@ -53,10 +58,11 @@ export const auth_handle = async ({ event, resolve }) => {
 	}
 	
 	const response = await resolve(event);
-      if (event.url.pathname.startsWith('/')) {
-            response.headers.append('Access-Control-Allow-Origin', DIRECTUS_URL);
-      }
-      return response;
+
+	if (event.url.pathname.startsWith('/')) {
+		response.headers.append('Access-Control-Allow-Origin', DIRECTUS_URL);
+	}
+	return response;
 }
 
 export const handle: Handle = sequence(

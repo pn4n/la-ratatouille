@@ -34,6 +34,7 @@ export const findByEmail = async (mail) => {
 
 export const verifyUser = async (email, pass) => {
 	let user = await findByEmail(email)
+    if (user.errors) return { success: false, message:user.errors[0].message }
     user = user.data[0]
 
     if (!user) return { success: false, message:'user not found' }
@@ -48,9 +49,8 @@ export const verifyUser = async (email, pass) => {
 
 export const verifySession = async (email, pass) => {
 	let user = await findByEmail(email)
+    if (user.errors) return { success: false, message:'user not found' }
     user = user.data[0]
-
-    if (!user) return { success: false, message:'user not found' }
 
 	// const dir = getDirectusInstance();
     // const verif =  await dir.request(verifyHash(pass, user.pass));

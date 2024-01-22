@@ -1,5 +1,6 @@
 <script>
 	import { fade } from 'svelte/transition';
+	import { formatDate } from '$lib/utils'
 	export let res;
 	export let isAuthenticated
 
@@ -16,7 +17,7 @@
 			the restaurant. Pleasase arrive a couple of minutes before the reservation time.
 		</p>
 		<div class="px-0 py-3 xs:px-3 text-xl text-secondary-800 font-light grid md:grid-cols-2">
-			<p>Date: {res.date}</p>
+			<p>Date: {formatDate(order.date_created)}</p>
 			<p>Time: {res.time}</p>
 			{#each res.info.split('\n') as info}
 				<p>{info}</p>

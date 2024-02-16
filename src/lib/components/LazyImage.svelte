@@ -1,27 +1,48 @@
 <script>
+    import { ProgressRadial } from "@skeletonlabs/skeleton";
+    import { onMount } from 'svelte'
+    import { fade } from 'svelte/transition'
+
     export let src
     export let alt
+    
+	let loaded = false;
+	// let failed = false;
+	let loading = false;
 
-    let imgLoading = true
+	onMount(() => {
+			const img = new Image();
+			img.src = src;
+			loading = true;
 
-    const showImg = () => { 
-        imgLoading = false 
-        }
+			img.onload = () => {
+					loading = false;
+					loaded = true;
+			};
+			img.onerror = () => {
+					loading = false;
+					// failed = true;
+			};
+	})
+        
 </script>
 
-<div aria-busy="{imgLoading}">
-    
-    <img src="{src}" alt="{alt}" loading="lazy"
-    on:load={showImg}>
 
-</div>
+        {#if loading == true}
+            <div class="spinner">
+                <ProgressRadial width='w-16'
+                meter="stroke-surface-500" track="stroke-surface-500/30"/>
+            </div>
+        {:else}
+            <img src="{src}" alt="{alt}" loading="lazy" in:fade={{ duration: 500 }}>
+        {/if}
+        
 
 <style>
     img {
         width: 100%;
         height: 100%;
         object-fit: cover;
-        /* opacity: 0; */
     }
     div::before{
         position: relative;
@@ -31,6 +52,16 @@
         width: 100%;
         height: 100%;
         margin: auto;
+    }
+    .spinner {
+        width: 100%;
+        height: 100%;
+        padding-bottom: 20px;
+    
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+
     }
 
 </style>

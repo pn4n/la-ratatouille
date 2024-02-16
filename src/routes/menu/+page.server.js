@@ -50,7 +50,7 @@ export const actions = {
     const item_info ='Email: ' + data.get('email') +
               ', Name: ' + data.get('name') +
               ', Phone: ' + data.get('phone') +
-              ', Address: ' + data.get('address') +
+              // ', Address: ' + data.get('address') +
               ', Comment: ' + data.get('comment')
 
     let items = data.get('order')

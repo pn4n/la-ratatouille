@@ -54,7 +54,7 @@
 					<div class="mx-auto max-w-md space-y-5">
 						<label class="label">
 							<span>Email</span>
-							<input class="input variant-form-material" type="email" name="email" required />
+							<input class="input variant-form-material" type="email" name="email" required autocomplete="email"/>
 						</label>
 						<label class="label">
 							<span>Password</span>
@@ -68,12 +68,12 @@
 					<div class="mx-auto max-w-md space-y-5">
 						<label class="label">
 							<span>Email</span>
-							<input class="input variant-form-material" type="text" name="email" required />
+							<input class="input variant-form-material" type="text" name="email" required autocomplete="email"/>
 						</label>
 
 						<label class="label">
 							<span>Name</span>
-							<input class="input variant-form-material" type="text" name="name" required />
+							<input class="input variant-form-material" type="text" name="name" required autocomplete="given-name"/>
 						</label>
 						<label class="label">
 							<span>Password</span>

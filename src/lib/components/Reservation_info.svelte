@@ -17,7 +17,7 @@
 			the restaurant. Pleasase arrive a couple of minutes before the reservation time.
 		</p>
 		<div class="px-0 py-3 xs:px-3 text-xl text-secondary-800 font-light grid md:grid-cols-2">
-			<p>Date: {formatDate(order.date_created)}</p>
+			<p>Date: {formatDate(res.date_created)}</p>
 			<p>Time: {res.time}</p>
 			{#each res.info.split('\n') as info}
 				<p>{info}</p>

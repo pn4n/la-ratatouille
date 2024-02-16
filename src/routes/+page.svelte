@@ -1,8 +1,12 @@
 <script>
 	import Reserve from '$lib/components/Reserve.svelte';
+	import Hero from '$lib/components/Hero_img.svelte';
 	import { fade } from 'svelte/transition';
 
+	// import hero from '/hero1_c.png';
+
 	import { getToastStore } from '@skeletonlabs/skeleton';
+	// import LazyImage from '$lib/components/LazyImage.svelte';
 	const toastStore = getToastStore();
 
 	// export let data;
@@ -18,17 +22,17 @@
 	export let data;
 </script>
 
-<!-- <div>
-{JSON.stringify(data)}
-</div> -->
 <div class="bg-white" in:fade={{ duration: 300 }}>
 	<div class="space-y-5 grid grid-cols-1 p-0 lg:grid-cols-2">
 		<div class=" ml-auto">
 			<h1 class="h1 text-primary-500 font-light ml-auto text-5xl pl-3">
 				A Mecca of French gastronomy
 			</h1>
-
-			<img src="/hero1_c.png" alt="hero" class="w-3/4 ml-auto" />
+			<div class="w-3/4 ml-auto">
+				<Hero src="/hero1_c.png"/>
+			</div>
+			<!-- <img src="/hero1_c.png" in:fade={{ duration: 300 }} 
+			alt="hero" class="w-3/4 ml-auto" /> -->
 		</div>
 		<div>
 			<div class="p-2 space-y-2 rounded-none font-light">
@@ -61,7 +65,12 @@
 				Wine Cellar & Wine library
 			</h1>
 
-			<img src="/hero2.png" alt="hero" class="w-3/4 md:ml-0 sm:mx-auto" />
+			<div class="w-3/4 md:ml-0 sm:mx-auto">
+				<Hero src="/hero2.png" />
+			</div>
+			
+			<!-- <img src="/hero2.png" in:fade={{ duration: 300 }}
+				alt="hero" class="w-3/4 md:ml-0 sm:mx-auto" /> -->
 		</div>
 		<div class="p-2 font-light flex items-center">
 			<div class="p-2 space-y-2">
@@ -139,9 +148,5 @@
 	h1 {
 		z-index: 1;
 		position: relative;
-	}
-	img {
-		margin-top: -2vw;
-		z-index: -100;
 	}
 </style>

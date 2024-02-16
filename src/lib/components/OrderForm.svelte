@@ -3,7 +3,13 @@
 	import { Stepper, Step } from '@skeletonlabs/skeleton';
 	import { getToastStore } from '@skeletonlabs/skeleton';
 	import { cart } from '$lib/stores/cart';
-	import { show_notif } from '$lib/utils';
+	// import { show_notif } from '$lib/utils';
+
+	let sum;
+	$: sum = $cart.reduce((total, item) => {
+			return total + item.price * item.quantity;
+		}, 0)
+		.toFixed(2);
 
 	const toastStore = getToastStore();
 	let form_status;
@@ -48,7 +54,7 @@
 					<tfoot>
 						<tr>
 							<th colspan="3">Total sum</th>
-							<td>SUM</td>
+							<td>{sum}</td>
 						</tr>
 					</tfoot>
 				</table>
@@ -76,24 +82,24 @@
 					<label class="label">
 						<span>Name</span>
 						<input class="input variant-form-material" type="text" name="name" 
-							value={user ? user.name : ''} required/>
+							value={user ? user.name : ''} required autocomplete="given-name"/>
 					</label>
 					<label class="label">
 						<span>Phone number</span>
 						<input class="input variant-form-material" type="tel" name="phone"
-							value={user ? user.phone : ''} required/>
+							value={user ? user.phone : ''} required autocomplete="tel"/>
 					</label>
 				</div>
 				<div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
 					<label class="label">
 						<span>E-mail</span>
 						<input class="input variant-form-material" type="email" name="email" 
-							value={user ? user.email : ''} required/>
+							value={user ? user.email : ''} required autocomplete="email"/>
 					</label>
 					<label class="label">
 						<span>Address</span>
 						<input class="input variant-form-material" type="text" name="address" 
-							value={user ? user.address : ''} required/>
+							value={user ? user.address : ''} required autocomplete="address-line1"/>
 					</label>
 				</div>
 				<label class="label">

@@ -33,7 +33,7 @@
 						type="text"
 						name="name"
 						value={user?.name || null}
-						required
+						required autocomplete="given-name"
 					/>
 				</label>
 				<label class="label">
@@ -43,7 +43,7 @@
 						type="email"
 						name="email"
 						value={user?.email || null}
-						required
+						required autocomplete="email"
 					/>
 				</label>
 				<label class="label">
@@ -53,7 +53,7 @@
 						type="tel"
 						name="phone"
 						value={user?.phone || null}
-						required
+						required autocomplete="tel"
 					/>
 				</label>
 			</div>

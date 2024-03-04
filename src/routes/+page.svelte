@@ -115,7 +115,7 @@
 	{/await}
 
 	<div class="space-y-5 grid grid-cols-1 py-8 p-0 lg:grid-cols-2">
-		<h1 id="book" class="h1 text-primary-500 font-light mx-auto text-center text-5xl pl-3">
+		<h1 class="h1 text-primary-500 font-light mx-auto text-center text-5xl pl-3">
 			Contacts & Address
 		</h1>
 

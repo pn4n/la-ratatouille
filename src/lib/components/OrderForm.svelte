@@ -25,20 +25,24 @@
 </script>
 
 <div class="p-2 md:px-8">
-	<Stepper regionContent="text-surface-800 py-2 " on:complete={submit}>
+	<Stepper regionContent="text-surface-800 py-2 " 
+		buttonNextLabel='{m.next()} →'
+		buttonBackLabel='← {m.back()}'
+		buttonCompleteLabel	= {m.submit()}
+		on:complete={submit}>
 		<Step>
 			<svelte:fragment slot="header">
-				<p class="text-primary-500 font-light text-4xl p-2">Cart</p>
+				<p class="text-primary-500 font-light text-4xl p-2">{m.cart()}</p>
 			</svelte:fragment>
 
 			<div class="table-container text-primary-900 ">
 				<table class="table table-hover">
 					<thead>
 						<tr>
-							<th>Item</th>
-							<th>Quantity</th>
-							<th>Price</th>
-							<th>Sum</th>
+							<th>{m.item_title()}</th>
+							<th>{m.item_quantity()}</th>
+							<th>{m.item_price()}</th>
+							<th>{m.total()}</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -53,7 +57,7 @@
 					</tbody>
 					<tfoot>
 						<tr>
-							<th colspan="3">Total sum</th>
+							<th colspan="3">{m.order_total()}</th>
 							<td>{sum}</td>
 						</tr>
 					</tfoot>
@@ -62,7 +66,7 @@
 		</Step>
 		<Step>
 			<svelte:fragment slot="header">
-				<h1 class="text-primary-500 font-light text-4xl p-2">Delivery info</h1>
+				<h1 class="text-primary-500 font-light text-4xl p-2">{m.delivery_info()}</h1>
 			</svelte:fragment>
 			<form
 				method="POST"
@@ -80,30 +84,30 @@
 			>
 				<div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
 					<label class="label">
-						<span>Name</span>
+						<span>{m.name()}</span>
 						<input class="input variant-form-material" type="text" name="name" 
 							value={user ? user.name : ''} required autocomplete="given-name"/>
 					</label>
 					<label class="label">
-						<span>Phone number</span>
+						<span>{m.phone()}</span>
 						<input class="input variant-form-material" type="tel" name="phone"
 							value={user ? user.phone : ''} required autocomplete="tel"/>
 					</label>
 				</div>
 				<div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
 					<label class="label">
-						<span>E-mail</span>
+						<span>E{m.email()}</span>
 						<input class="input variant-form-material" type="email" name="email" 
 							value={user ? user.email : ''} required autocomplete="email"/>
 					</label>
 					<label class="label">
-						<span>Address</span>
+						<span>{m.address()}</span>
 						<input class="input variant-form-material" type="text" name="address" 
 							value={user ? user.address : ''} required autocomplete="address-line1"/>
 					</label>
 				</div>
 				<label class="label">
-					<span>Comment</span>
+					<span>{m.comment()}</span>
 					<textarea class="textarea variant-form-material" name="comment"></textarea>
 				</label>
 				<textarea class='hidden' name="order"> {JSON.stringify($cart.map(x => ({items_id:x.id, quantity:x.quantity})))} </textarea>

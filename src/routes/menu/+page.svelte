@@ -2,6 +2,7 @@
 	import { getToastStore } from '@skeletonlabs/skeleton';
 
 	const toastStore = getToastStore();
+	import { languageTag } from "$paraglide/runtime.js"
 
 	import { getTitle } from '$lib/utils';
 	import { cart } from '$lib/stores/cart';
@@ -38,7 +39,7 @@
 <div class="pb-10" in:fade={{ duration: 300 }}>
 {#await data.streamed}
 	<div class="flex flex-col items-center space-y-5 font-light">
-		<p class="text-2xl text-center text-tertiary-800">Please wait, we are loading the menu...</p>
+		<p class="text-2xl text-center text-tertiary-800">{m.menu_loading()}</p>
 		<ProgressBar
 			value={undefined}
 			meter="bg-secondary-500"
@@ -47,11 +48,9 @@
 		/>
 	</div>
 {:then dir}
-<!-- <div>{JSON.stringify(dir.orders)}</div>
-<div>{JSON.stringify(form)}</div> -->
 	{#each dir.menu_items as category}
 		<h1 class="h2 text-primary-500 font-light text-5xl pl-3 pt-10 pb-3">
-			{getTitle(category, 'en')}
+			{getTitle(category, languageTag())}
 		</h1>
 
 		<div

@@ -11,8 +11,8 @@
 		<li>
 			<a href="/nine"  style="pointer-events: none">
 				<span class="badge bg-tertiary-400 rounded-none text-white">#</span>
-				<span class="flex-auto">Date</span>
-				<span class="text-right">Status</span>
+				<span class="flex-auto">{m.date()}</span>
+				<span class="text-right">{m.status()}</span>
 			</a>
 		</li>
 	</ul>
@@ -30,10 +30,9 @@
 
 </div>
 {:else}
-<p class="text-xl text-surface-800">No items. You can create a new one 
-	<a href="/{type == 'reservation' ? 'reservation' : 'menu'}" class="anchor">here</a>.</p>
+<!-- <p class="text-xl text-surface-800">No items. You can create a new one 
+	<a href="/{type == 'reservation' ? 'reservation' : 'menu'}" class="anchor">here</a>.</p> -->
+	<p class="text-xl text-surface-800">{@html m.statusList_noItems()}</p>
 {/if}
 
 </div>
-
-<!-- {JSON.stringify(list)} -->

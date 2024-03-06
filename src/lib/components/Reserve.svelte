@@ -8,26 +8,26 @@
 		class="p-2 lg:p-8 md:m-8 mx-0 my-8 space-y-5 card rounded-none bg-surface-50 text-primary-500"
 	>
 		<h1 class="h1 text-primary-500 font-light mx-auto text-center text-5xl pl-3">
-			Reserve a table
+			{m.reserve_title()}
 		</h1>
 
 		<p class="text-xl text-secondary-800 font-light">
-			"La Ratatouille" strives to feature market and local cuisine. The majority of products are
-			organic and local, selected from producers and breeders in the region.
+			{m.reserve_text1()}
 		</p>
 		{#if !user}
 			<p class="text-xl text-secondary-800 font-light">
-				Please 
+				{@html m.reserve_userWarn()}
+				<!-- Please 
                 <a href="/login?tab=register" class="anchor">create an account</a>
                 or 
                 <a href="/login" class="anchor">login</a> to save the history of your reservations
-				and orders.
+				and orders. -->
 			</p>
 		{/if}
 		<form method="POST" class="space-y-5">
 			<div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
 				<label class="label">
-					<span>Name</span>
+					<span>{m.name()}</span>
 					<input
 						class="input variant-form-material"
 						type="text"
@@ -37,7 +37,7 @@
 					/>
 				</label>
 				<label class="label">
-					<span>Email</span>
+					<span>{m.email()}</span>
 					<input
 						class="input variant-form-material"
 						type="email"
@@ -47,7 +47,7 @@
 					/>
 				</label>
 				<label class="label">
-					<span>Phone number</span>
+					<span>{m.phone()}</span>
 					<input
 						class="input variant-form-material"
 						type="tel"
@@ -59,24 +59,24 @@
 			</div>
 			<div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
 				<label class="label">
-					<span>Date</span>
+					<span>{m.date()}</span>
 					<input class="input variant-form-material" type="date" name="date" required />
 				</label>
 				<label class="label">
-					<span>Time</span>
+					<span>{m.time()}</span>
 					<input class="input variant-form-material" type="time" name="time" required />
 				</label>
 				<label class="label">
-					<span>Number of people</span>
+					<span>{m.nOfPeople()}</span>
 					<input class="input variant-form-material" type="number" min="1" name="people" required />
 				</label>
 			</div>
 			<label class="label">
-				<span>Comment</span>
+				<span>{m.comment()}</span>
 				<input class="input variant-form-material" type="text" name="comment" />
 			</label>
 
-			<button class="btn variant-filled-primary block mx-auto rounded-none">Book a table</button>
+			<button class="btn variant-filled-primary block mx-auto rounded-none">{m.reserve_bookBTN()}</button>
 		</form>
 	</div>
 </div>

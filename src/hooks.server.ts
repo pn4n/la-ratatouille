@@ -1,8 +1,15 @@
 import type { Handle } from '@sveltejs/kit';
-import { DIRECTUS_URL } from '$env/static/private';
-import { verifySession } from '$lib/dir-client.js';
 import { sequence } from '@sveltejs/kit/hooks';
 import { redirect } from '@sveltejs/kit';
+
+import { i18n } from '$lib/i18n.js'
+import { languageTag, availableLanguageTags } from '$paraglide/runtime.js';
+
+import { DIRECTUS_URL } from '$env/static/private';
+import { removeLangSlug } from '$lib/utils.js'
+import { verifySession } from '$lib/dir-client.js';
+
+export const reroute = i18n.reroute()
 
 export async function dir_handle({ event, resolve }) {
 	return await resolve(event, {
@@ -15,10 +22,11 @@ export async function dir_handle({ event, resolve }) {
 export const auth_handle = async ({ event, resolve }) => {
 	const username = event.cookies.get('user');
 
-	const pathname = event.url.pathname;
+	const url_without_lang = removeLangSlug(event.url.pathname, availableLanguageTags);
 
-	if (!username && pathname.startsWith('/account')) {
-		throw redirect(303, '/login');
+	if (!username && url_without_lang.startsWith('/account')) {
+		// throw redirect(303, '/login');
+		throw redirect(303, i18n.resolveRoute('/login', languageTag))
 	}
 	
 	const session = await event.cookies.get('session');
@@ -32,10 +40,13 @@ export const auth_handle = async ({ event, resolve }) => {
 		await event.cookies.delete('session', { path: '/' });
 		await event.cookies.delete('user', { path: '/' });
 		
-		if ( pathname.startsWith('/account')) throw redirect(303, '/login');
+		if ( url_without_lang.startsWith('/account')) 
+		throw redirect(303, i18n.resolveRoute('/login', languageTag))
 	}
 
-	if (username && pathname == '/login') throw redirect(303, '/account');
+	if (username && url_without_lang == '/login') 
+	// throw redirect(303, '/account');
+	throw redirect(303, i18n.resolveRoute('/account', languageTag))
 
 	const currentUser = res.user
 	if (currentUser) {
@@ -48,13 +59,13 @@ export const auth_handle = async ({ event, resolve }) => {
 			address: currentUser.address,
 		};
 	} 
-	if (pathname == '/signout') {
+	if (url_without_lang == '/signout') {
 		await event.cookies.delete('session', { path: '/' });
 		await event.cookies.delete('user', { path: '/' });
 		await event.cookies.delete('reservation', { path: '/' });
 		await event.cookies.delete('order', { path: '/' });
 		event.locals.user = null;
-		redirect(303, '/login');
+		throw redirect(303, i18n.resolveRoute('/login', languageTag))
 	}
 	
 	const response = await resolve(event);

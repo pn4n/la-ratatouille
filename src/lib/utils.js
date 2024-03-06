@@ -78,3 +78,12 @@ export const formatDate = (date) => {
       day: 'numeric',
   }).format(Ddate);
 }
+
+export const removeLangSlug = (url, langs) => {
+  const parts = url.split('/');
+  if (langs.includes(parts[1])) {
+    parts.splice(1, 1);
+    // parts.shift();
+  }
+  return parts.join('/');
+}

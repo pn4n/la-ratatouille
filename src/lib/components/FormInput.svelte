@@ -1,6 +1,5 @@
 <script>
 	export let name, value;
-	let open = false;
 </script>
 
 <form method="POST" class="p-0 py-3 md:p-3" action="?/edit/{name}">

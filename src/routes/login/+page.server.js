@@ -3,6 +3,9 @@ import { generateHash, createItem } from '@directus/sdk';
 import { getDirectusInstance, verifyUser } from '$lib/dir-client.js';
 import { fail } from '@sveltejs/kit';
 
+// import { languageTag } from '$paraglide/runtime.js';
+// import { i18n } from '$lib/i18n.js';
+
 export function load({url}) {
   
   const tab = url.searchParams.get('tab');
@@ -79,6 +82,11 @@ export const actions = {
       // const reserve = await cookies.get('reservation', { path: '/' });
       // const order = await cookies.get('order', { path: '/' });
       // const ress = await updateUser(res.id, order, reserve)
+      // redirect(303, '/account')
+
+      // goto(i18n.resolveRoute(url_without_lang, lang))
+      // console.log(i18n.resolveRoute('/account', languageTag))
+      // redirect(i18n.resolveRoute('/account', languageTag))
       redirect(303, '/account')
     }
 

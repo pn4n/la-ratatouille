@@ -15,10 +15,10 @@
 <div class="wrapper" transition:fly={{ delay: 250, duration: 300, y: 100, opacity: 0.5 }}>
     <article class="rounded-md text-lg bg-surface-200">
         <div class="sum-div text-surface-800">
-            <p>Total: {sum} EUR</p>
+            <p>{m.total()}: {sum} {m.currency()}</p>
         </div>
         <button class="btn rounded-md variant-filled-primary" type="button" on:click={handle_click}>
-            Checkout
+            {m.menu_checkout()}
         </button>
     </article>
 </div>
@@ -28,19 +28,16 @@
     p {
         min-width: fit-content;
         margin: auto;
-        /* font-weight: 500; */
     }
     article {
         position:absolute;
         bottom: 0;
         right: 10px;
-        /* padding: 10px; */
         margin: 10px 0;
         height: min-content;
         text-align: center;
         display: flex;
         max-width: fit-content;
-        /* border: 2px #8f442f solid; */
     }
     @media (max-width: 768px) {
         article {
@@ -61,14 +58,9 @@
             bottom: 0;
             left: 0;
             padding: 0;
-            /* margin: 0; */
         }
         button {
             width: 80vw;
-            /* padding: 20px; */
-
-            /* border: 2px rgba(255, 0, 0, 0.257) solid; */
-            /* max-width: 500px; */
             }
         
     }
@@ -84,12 +76,9 @@
         width: 100%;
         position: absolute;
         bottom: 0;
-        /* border: 2px red solid; */
     }
     button {
-        /* margin: 0px; */
         margin: 10px;
         padding: 10px;
-        /* max-width: 300px; */
     }
 </style>

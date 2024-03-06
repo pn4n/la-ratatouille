@@ -1,4 +1,6 @@
 <script>
+    import { languageTag } from '$paraglide/runtime.js';
+
     import LazyImage from "$lib/components/LazyImage.svelte";
     import { getTitle } from '$lib/utils'
     import { cart } from '$lib/stores/cart';
@@ -11,12 +13,12 @@
 </script>
 
 <div class="card article text-xl rounded-none py-12 text-secondary-800">
-    <div class="card-header bg-surface-50">{ getTitle(item, 'en')}</div>
+    <div class="card-header bg-surface-50">{ getTitle(item, languageTag())}</div>
 
     <LazyImage src="{url}/assets/{item.img}" alt="menu item" />
 
     <div class="card-footer bg-surface-50">
-        <p>{item.price} EUR</p>
+        <p>{item.price} {m.currency()}</p>
         <div class="grid ">
             {#if itemInCart?.quantity}
             <button class="btn px-3 variant-soft-tertiary" on:click={() => cart.decreaseQuantity(item.id)}
@@ -31,7 +33,7 @@
                 >
             {:else}
                 <button class="btn variant-soft-tertiary" on:click={() => cart.addToCart(item)}>
-                    Add</button
+                    {m.menu_add()}</button
                 >
             {/if}
         </div>

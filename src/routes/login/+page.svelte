@@ -53,30 +53,30 @@
 				<form method="POST" class="space-y-5 py-5" action="?/signin">
 					<div class="mx-auto max-w-md space-y-5">
 						<label class="label">
-							<span>Email</span>
+							<span>{m.email()}</span>
 							<input class="input variant-form-material" type="email" name="email" required autocomplete="email"/>
 						</label>
 						<label class="label">
-							<span>Password</span>
+							<span>{m.password()}</span>
 							<input class="input variant-form-material" type="password" name="password" required />
 						</label>
 					</div>
-					<button class="btn variant-filled-primary block mx-auto rounded-none">Log in</button>
+					<button class="btn variant-filled-primary block mx-auto rounded-none">{m.login()}</button>
 				</form>
 			{:else if tabSet === 1}
 				<form method="POST" class="space-y-5 py-5" action="?/signup">
 					<div class="mx-auto max-w-md space-y-5">
 						<label class="label">
-							<span>Email</span>
+							<span>{m.email()}</span>
 							<input class="input variant-form-material" type="text" name="email" required autocomplete="email"/>
 						</label>
 
 						<label class="label">
-							<span>Name</span>
+							<span>{m.name()}</span>
 							<input class="input variant-form-material" type="text" name="name" required autocomplete="given-name"/>
 						</label>
 						<label class="label">
-							<span>Password</span>
+							<span>{m.password()}</span>
 							<input
 								class="input variant-form-material"
 								type="password"
@@ -86,7 +86,7 @@
 							/>
 						</label>
 						<label class="label">
-							<span>Confirm password</span>
+							<span>{m.confirm_password()}</span>
 							<input
 								class="input variant-form-material"
 								type="password"
@@ -97,13 +97,13 @@
 						</label>
 						{#if pass !== '' && confpass !== pass}
 							<p class="text-red-600 text-sm font-light" transition:blur={{ amount: 10 }}>
-								Password not match
+								{m.pass_not_match()}
 							</p>
 						{/if}
 					</div>
 					<button
 						class="btn variant-filled-primary block mx-auto rounded-none"
-						disabled={!validpass}>Create an account</button
+						disabled={!validpass}>{m.create_acc()}</button
 					>
 				</form>
 			{/if}

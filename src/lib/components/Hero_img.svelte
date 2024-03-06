@@ -18,20 +18,10 @@
         <ProgressRadial width='w-16'
         meter="stroke-surface-500" track="stroke-surface-500/30"/>
     </div>
-
-
-
-    <!-- <div class="placeholder h-64" class:animate-pulse={true}/> -->
 {:else}
     <img src="{src}" alt="hero" in:fade={{ duration: 500 }}>
 {/if}
 
-<!-- <div class="{loaded ? ' ' : 'placeholder'}">
-    
-    <div class="placeholder w-full h-full animate-pulse" class:animate-pulse={true}/>
-    <img src={src} alt="hero" class="w-full h-full object-cover" 
-    in:fade={{ duration: 300 }}/>
-</div> -->
 
 <style>
     .spinner {
